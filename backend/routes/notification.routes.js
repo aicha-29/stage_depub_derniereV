@@ -65,7 +65,23 @@ router.patch('/read-all', authMiddleware, async (req, res) => {
 });
 
 
+router.get('/employee', authMiddleware, async (req, res) => {
+  try {
+    const notifications = await Notification.find({
+      recipient: req.user._id,
+      $or: [
+        { type: 'account_created' },
+        { type: 'profile_updated' },
+        { type: 'employee_deleted' }
+      ]
+    })
+    .sort({ createdAt: -1 });
 
+    res.json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
 
 
 // Supprimer une notification spécifique

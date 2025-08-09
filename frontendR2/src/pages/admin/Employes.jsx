@@ -8,6 +8,10 @@ import axios from "axios";
 import { FiSearch, FiPlus } from "react-icons/fi";
 import { FaArrowLeft } from "react-icons/fa";
 import StatsPage from "../employe/StatsPage.jsx";
+import { getSocket } from "../../utils/socket";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Employes = () => {
   const [employes, setEmployes] = useState([]);
   const [filteredEmployes, setFilteredEmployes] = useState([]);
@@ -20,7 +24,7 @@ const Employes = () => {
   const [employeeToUpdate, setEmployeeToUpdate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState("");
-  const [selectedEmployeeForDashboard, setSelectedEmployeeForDashboard] =
+  const [selectedEmployeeForDashboard, setSelectedEmployeeForDashboard] = 
     useState(null);
   const [showDashboard, setShowDashboard] = useState(false);
 
@@ -31,22 +35,78 @@ const Employes = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      console.log("data", res.data.data);
-      console.log("role est ", res.data.data.role);
       setRole(res.data.data.role);
     } catch (error) {
       console.log("erreur lors de la récuppération du role", error);
+      toast.error("Erreur lors de la récupération du rôle");
     }
   };
+
   useEffect(() => {
     fetchRole();
-  }, []);
-  useEffect(() => {
     fetchEmployees();
+    setupSocketListeners();
   }, []);
+
+  const setupSocketListeners = () => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?._id;
+    
+    const socket = getSocket(token, userId);
+
+    // Écouter les mises à jour d'employés
+    socket.on('employee_updated', (updatedEmployee) => {
+      setEmployes(prev => 
+        prev.map(emp => 
+          emp._id === updatedEmployee._id ? updatedEmployee : emp
+        )
+      );
+      setFilteredEmployes(prev => 
+        prev.map(emp => 
+          emp._id === updatedEmployee._id ? updatedEmployee : emp
+        )
+      );
+      
+      if (selectedEmployee?._id === updatedEmployee._id) {
+        setEmployeeDetails(prev => ({
+          ...prev,
+          employee: updatedEmployee
+        }));
+      }
+      toast.success(`Profil de ${updatedEmployee.name} mis à jour`);
+    });
+
+    // Écouter les nouveaux employés
+    socket.on('new_employee', (newEmployee) => {
+      setEmployes(prev => [...prev, newEmployee]);
+      setFilteredEmployes(prev => [...prev, newEmployee]);
+      toast.success(`Nouvel employé ajouté: ${newEmployee.name}`);
+    });
+
+    // Écouter les suppressions d'employés
+    socket.on('employee_deleted', (deletedEmployee) => {
+      setEmployes(prev => prev.filter(emp => emp._id !== deletedEmployee._id));
+      setFilteredEmployes(prev => prev.filter(emp => emp._id !== deletedEmployee._id));
+      
+      if (selectedEmployee?._id === deletedEmployee._id) {
+        setIsModalOpen(false);
+        setSelectedEmployee(null);
+        setEmployeeDetails(null);
+      }
+      toast.warning(`Employé ${deletedEmployee.name} supprimé`);
+    });
+
+    return () => {
+      socket.off('employee_updated');
+      socket.off('new_employee');
+      socket.off('employee_deleted');
+    };
+  };
 
   const fetchEmployees = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         "http://localhost:5001/api/admin/employees",
         {
@@ -57,9 +117,12 @@ const Employes = () => {
       );
       setEmployes(response.data);
       setFilteredEmployes(response.data);
-      console.log("la réponse de employees", response.data);
+      //toast.success("Liste des employés actualisée");
     } catch (err) {
       console.error("Error fetching employes:", err);
+      toast.error("Erreur lors du chargement des employés");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +130,7 @@ const Employes = () => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-       ` http://localhost:5001/api/admin/employees/detailse/${employeeId}`,
+        `http://localhost:5001/api/admin/employees/detailse/${employeeId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -77,6 +140,7 @@ const Employes = () => {
       return response.data;
     } catch (error) {
       console.error("Error fetching employee details:", error);
+      toast.error("Erreur lors du chargement des détails");
       throw error;
     } finally {
       setIsLoading(false);
@@ -104,6 +168,7 @@ const Employes = () => {
       setIsModalOpen(true);
     } catch (error) {
       console.error("Failed to load employee details:", error);
+      toast.error("Échec du chargement des détails");
     }
   };
 
@@ -125,7 +190,7 @@ const Employes = () => {
         formData,
         {
           headers: {
-            Authorization:` Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -134,9 +199,10 @@ const Employes = () => {
       setEmployes([...employes, response.data.employee]);
       setFilteredEmployes([...filteredEmployes, response.data.employee]);
       setIsAddModalOpen(false);
-      console.log("new", newEmployee);
+      toast.success("Employé ajouté avec succès");
     } catch (error) {
       console.error("Error adding employee:", error);
+      toast.error("Erreur lors de l'ajout de l'employé");
     }
   };
 
@@ -152,11 +218,11 @@ const Employes = () => {
       if (updatedData.profilePhoto instanceof File) {
         formData.append("profilePhoto", updatedData.profilePhoto);
       }
-      // Ajout de l'ID dans FormData si nécessaire par le backend
+      
       formData.append("id", id);
 
       const response = await axios.post(
-       ` http://localhost:5001/api/admin/employees/update/${id}`,
+        `http://localhost:5001/api/admin/employees/update/${id}`,
         formData,
         {
           headers: {
@@ -165,8 +231,7 @@ const Employes = () => {
           },
         }
       );
-      console.log("Mise à jour réussie :", updatedData);
-      // Mise à jour de l'état local
+
       setEmployes(
         employes.map((emp) => (emp._id === id ? response.data.employee : emp))
       );
@@ -177,9 +242,11 @@ const Employes = () => {
       );
 
       setIsUpdateModalOpen(false);
+      toast.success("Employé mis à jour avec succès");
       return response.data;
     } catch (error) {
       console.error("Error updating employee:", error);
+      toast.error("Erreur lors de la mise à jour");
       throw error;
     }
   };
@@ -200,9 +267,10 @@ const Employes = () => {
         );
         setEmployes((prev) => prev.filter((p) => p._id !== employeId));
         setFilteredEmployes((prev) => prev.filter((p) => p._id !== employeId));
+        toast.success("Employé supprimé avec succès");
       } catch (error) {
         console.log("erreur de suppression", error);
-        alert("Échec de la suppression");
+        toast.error("Échec de la suppression");
       }
     }
   };
@@ -216,7 +284,7 @@ const Employes = () => {
     setIsUpdateModalOpen(false);
     setEmployeeToUpdate(null);
   };
-  ////////////////////
+
   const handleShowDashboard = (employe) => {
     setSelectedEmployee(employe);
     setShowDashboard(true);
@@ -226,8 +294,7 @@ const Employes = () => {
     setShowDashboard(false);
     setSelectedEmployee(null);
   };
-  console.log("selected", selectedEmployee);
-  ////////////////////////////////::
+
   return (
     <div className="employes-page">
       {showDashboard ? (
@@ -327,4 +394,5 @@ const Employes = () => {
     </div>
   );
 };
+
 export default Employes;

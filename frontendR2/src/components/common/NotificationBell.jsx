@@ -47,43 +47,9 @@ const NotificationBell = () => {
       }
     };
 
-    // Gestionnaire pour les mises à jour de notifications
-    // const handleNotificationUpdate = (data) => {
-    //   switch (data.action) {
-    //     case 'mark_as_read':
-    //       setNotifications(prev => 
-    //         prev.map(n => n._id === data.notificationId ? { ...n, read: true } : n)
-    //       );
-    //       setUnreadCount(prev => Math.max(0, prev - 1));
-    //       break;
+ 
           
-    //     case 'mark_all_read':
-    //       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-    //       setUnreadCount(0);
-    //       break;
-          
-    //     case 'delete':
-    //       setNotifications(prev => prev.filter(n => n._id !== data.notificationId));
-    //       setUnreadCount(prev => {
-    //         const deletedNotification = notifications.find(n => n._id === data.notificationId);
-    //         return deletedNotification && !deletedNotification.read ? Math.max(0, prev - 1) : prev;
-    //       });
-    //       break;
-          
-    //     case 'delete_multiple':
-    //       setNotifications(prev => prev.filter(n => !data.notificationIds.includes(n._id)));
-    //       setUnreadCount(prev => {
-    //         const deletedUnreadCount = notifications
-    //           .filter(n => data.notificationIds.includes(n._id) && !n.read)
-    //           .length;
-    //         return Math.max(0, prev - deletedUnreadCount);
-    //       });
-    //       break;
-          
-    //     default:
-    //       break;
-    //   }
-    // };
+  
 
 
 

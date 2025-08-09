@@ -20,7 +20,9 @@ import "react-toastify/dist/ReactToastify.css";
 import StatsPageAdmin from "./pages/admin/StatsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import StatsPageWrapper from "./pages/employe/StatsPageWrapper";
-import ManagerProjectsPage from "./pages/manager/projetManagerPage";
+import ProjectsPageManager from "./pages/manager/ProjectsPageManager2";
+import StatsPageManager  from "./pages/manager/StatsPageManager";
+import TasksPageManager from "./pages/manager/TasksPageManager"
 function App() {
   const role = localStorage.getItem("role");
   const location = useLocation();
@@ -134,7 +136,7 @@ function App() {
             path="/manager/dashboard"
             element={
               <ProtectedRoute role="manager">
-                <StatsPageAdmin />
+                <StatsPageManager />
               </ProtectedRoute>
             }
           />
@@ -150,7 +152,7 @@ function App() {
             path="/manager/projets"
             element={
               <ProtectedRoute role="manager">
-                <ManagerProjectsPage/>
+                <ProjectsPageManager/>
               </ProtectedRoute>
             }
           />
@@ -174,7 +176,7 @@ function App() {
             path="/manager/taches"
             element={
               <ProtectedRoute role="manager">
-                <TasksPage />
+                <TasksPageManager />
               </ProtectedRoute>
             }
           />

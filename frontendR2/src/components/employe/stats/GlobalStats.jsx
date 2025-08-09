@@ -46,7 +46,7 @@ const GlobalStats = ({ data }) => {
             <Col xs={24} sm={12} md={6}>
               <StatsCard
                 title="Tâches complétées"
-                value={data.tasks.statusDistribution.completed}
+                value={data.tasks.statusDistribution?.completed}
                 icon={<CheckCircleOutlined />}
                 color="#06d6a0"
               />
@@ -54,7 +54,7 @@ const GlobalStats = ({ data }) => {
             <Col xs={24} sm={12} md={6}>
               <StatsCard
                 title="Tâches en retard"
-                value={data.tasks.statusDistribution.late}
+                value={data.tasks.statusDistribution?.late}
                 icon={<WarningOutlined />}
                 color="#e63946"
               />

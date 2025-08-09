@@ -4,9 +4,9 @@ const Task = require("../../models/task");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
+const Notification = require('../../models/notification');
 const multer = require("multer");
 const asyncHandler = require("express-async-handler");
-
 const {
   uploadUserPhoto,
   processUserPhoto,
@@ -168,6 +168,30 @@ exports.createEmployee = async (req, res) => {
       // Sauvegarder dans la base de données
       await newEmployee.save();
 
+          // Créer une notification
+      const notification = new Notification({
+        recipient: newEmployee._id,
+        message: `Bienvenue dans l'équipe DEVPUB, ${newEmployee.name}! Votre compte a été créé.`,
+        type: 'account_created'
+      });
+      await notification.save();
+
+         // Notifier tous les managers
+      const managers = await User.find({ role: 'manager' });
+      managers.forEach(async (manager) => {
+        const managerNotification = new Notification({
+          recipient: manager._id,
+          message: `Un nouvel employé a été ajouté: ${newEmployee.name}`,
+          type: 'new_employee'
+        });
+        await managerNotification.save();
+        
+        // Émettre l'événement Socket.IO
+        const io = req.app.get('io');
+        io.to(`user_${manager._id}`).emit('new_notification', managerNotification);
+      });
+
+
       // Réponse avec les données créées (sans le mot de passe)
       const employeeResponse = newEmployee.toObject();
       delete employeeResponse.password;
@@ -187,6 +211,7 @@ exports.createEmployee = async (req, res) => {
     });
   }
 };
+
 exports.deleteEmployee = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -248,8 +273,30 @@ exports.deleteEmployee = async (req, res) => {
     await User.deleteOne({ _id: employeeId }).session(session);
 
     // 6. Valider la transaction
-    await session.commitTransaction();
+  
 
+
+      // Créer des notifications pour tous les employés et managers
+    const usersToNotify = await User.find({
+      $or: [{ role: 'employee' }, { role: 'manager' }],
+      _id: { $ne: employeeId }
+    });
+
+     usersToNotify.forEach(async (user) => {
+      const notification = new Notification({
+        recipient: user._id,
+        message: `L'employé ${employee.name} a été supprimé du système de DEVPUB.`,
+        type: 'employee_deleted'
+      });
+      await notification.save();
+      
+      // Émettre l'événement Socket.IO
+      const io = req.app.get('io');
+      io.to(`user_${user._id}`).emit('new_notification', notification);
+    });
+
+
+      await session.commitTransaction();
     res.status(200).json({
       message: "Employé supprimé avec succès",
       deletedEmployee: {
@@ -277,7 +324,7 @@ exports.updateEmployee = asyncHandler(async (req, res) => {
   if (!employee) {
     return res.status(404).json({ message: "Employé non trouvé" });
   }
-
+const baseUrl=`${req.protocol}://${req.get("host")}/public/`;
   // Préparer les updates
   const updates = {
     name: req.body.name,
@@ -332,6 +379,37 @@ exports.updateEmployee = asyncHandler(async (req, res) => {
 
   // Préparer la réponse sans reconstruire l'URL
   const response = updatedEmployee.toObject();
+  response.profilePhoto=response.profilePhoto?baseUrl+response.profilePhoto:response.profilePhoto;
+
+   // Créer une notification pour l'employé
+  const notification = new Notification({
+    recipient: employee._id,
+    message: `Votre profil a été mis à jour par l'administrateur.`,
+    type: 'profile_updated'
+  });
+  await notification.save();
+  
+    // Émettre l'événement Socket.IO
+  const io = req.app.get('io');
+  io.to(`user_${employee._id}`).emit('employee_updated', response);
+  io.to(`user_${employee._id}`).emit('new_notification', notification);
+  
+  
+
+    // Notification pour tous les managers
+  const managers = await User.find({ role: 'manager' }).select('_id');
+  managers.forEach(manager => {
+    const managerNotification = new Notification({
+      recipient: manager._id,
+      sender: req.user._id,
+      message: `Le profil de ${employee.name} a été modifié`,
+      type: 'employee_update'
+    });
+    managerNotification.save();
+    io.to(`user_${manager._id}`).emit('new_notification', managerNotification);
+  });
+
+
 
   res.status(200).json({
     message: "Employé mis à jour avec succès",
@@ -357,3 +435,4 @@ exports.resetPassword = asyncHandler(async (req, res) => {
     message: "Mot de passe réinitialisé avec succès",
   });
 });
+

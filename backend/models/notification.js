@@ -20,7 +20,7 @@ const NotificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['project_created', 'project_updated', 'project_deleted', 'task_assigned'],
+    enum: ['project_created', 'project_updated', 'project_deleted', 'task_assigned',"profile_updated","account_created","new_employee","employee_update","employee_deleted"],
     required: true
   },
   read: {
