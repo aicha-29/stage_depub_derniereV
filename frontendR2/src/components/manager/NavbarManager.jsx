@@ -7,6 +7,7 @@ import defaultPhoto from "../../assets/images/profil-default.jpeg";
 import { useNavigate } from "react-router-dom";
 import NotificationBell from "../common/NotificationBell";
 //import "./NotificationBell.css"; // Importez le CSS
+import '../common/navbar.css';
 
 
 const NavbarManager = () => {
@@ -50,52 +51,52 @@ const NavbarManager = () => {
 
       {/* Barre de navigation principale */}
       <div
-        className={`navbar ${menuOpen ? "menu-open" : ""}`}
+        className={`navbare ${menuOpen ? "menu-opene" : ""}`}
         style={{ zIndex: "100" }}
       >
         <div className="logo">
-          <img src={logo} alt="logo" className="logo-entreprise" />
+          <img src={logo} alt="logo" className="logo-entreprisee" />
         </div>
         <div className="menu">
           <NavLink
             to="/manager/dashboard"
-            className={({ isActive }) => (isActive ? "active" : "not-active")}
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
           >
             <i className="fa-solid fa-home"></i>
           </NavLink>
           <NavLink
             to="/manager/projets"
-            className={({ isActive }) => (isActive ? "active" : "not-active")}
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
           >
             <i className="fa-solid fa-folder"></i>
           </NavLink>
           <NavLink
             to="/manager/employes"
-            className={({ isActive }) => (isActive ? "active" : "not-active")}
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
           >
             <i className="fa-solid fa-users"></i>
           </NavLink>
           <NavLink
             to="/manager/taches"
-            className={({ isActive }) => (isActive ? "active" : "not-active")}
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
           >
             <i className="fa-solid fa-list-check"></i>
           </NavLink>
           <NavLink
             to="/manager/favorites"
-            className={({ isActive }) => (isActive ? "active" : "not-active")}
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
           >
             <i className="fa-solid fa-star"></i>
           </NavLink>
           <NavLink
             to="/manager/profil"
-            className={({ isActive }) => (isActive ? "active" : "not-active")}
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
           >
             <i className="fa-solid fa-address-card"></i>
           </NavLink>
           <NavLink
           to="#"
-          className={({ isActive }) => (isActive ? "active" : "not-active")}
+          className={({ isActive }) => (isActive ? "activee" : "not-activee")}
           onClick={(e) => e.preventDefault()}
         >
           <NotificationBell />
@@ -108,7 +109,7 @@ const NavbarManager = () => {
           <img src={profileImageSrc} alt="Profile" />
         </div>
 
-        <div className="deconnexion text-body-secondary">
+        <div className="deconnexion text-body-secondarye">
           <button type="button" onClick={handelLogOut}>
             Déconnexion
             <i

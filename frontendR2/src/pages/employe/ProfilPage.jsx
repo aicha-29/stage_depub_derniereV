@@ -1,7 +1,8 @@
-import React from "react";
+
 import Profil from "../../components/common/Profil";
 import { getSocket } from '../../utils/socket';
 import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
 function ProfilPage() {
       useEffect(() => {
          const token = localStorage.getItem("token");

@@ -21,15 +21,20 @@ import StatsPageAdmin from "./pages/admin/StatsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import StatsPageWrapper from "./pages/employe/StatsPageWrapper";
 import ProjectsPageManager from "./pages/manager/ProjectsPageManager2";
-import StatsPageManager  from "./pages/manager/StatsPageManager";
-import TasksPageManager from "./pages/manager/TasksPageManager"
+import StatsPageManager from "./pages/manager/StatsPageManager";
+import TasksPageManager from "./pages/manager/TasksPageManager";
+
 function App() {
   const role = localStorage.getItem("role");
   const location = useLocation();
   const path = location.pathname;
 
+  // Détermine si la route actuelle est une route publique (sans sidebar)
+  const isPublicRoute = ["/", "/login"].includes(path);
+
   const shouldShowSidebar =
-    (role === "employee" &&
+    !isPublicRoute &&
+    ((role === "employee" &&
       [
         "/employe/dashboard",
         "/employe/projets",
@@ -38,25 +43,25 @@ function App() {
         "/employe/profil",
         "/employee/notifications",
       ].includes(path)) ||
-    (role === "admin" &&
-      [
-        "/admin/dashboard",
-        "/admin/projets",
-        "/admin/employes",
-        "/admin/profil",
-        "/admin/taches",
-        "/admin/notifications",
-      ].includes(path)) ||
-    (role === "manager" &&
-      [
-        "/manager/dashboard",
-        "/manager/projets",
-        "/manager/employes",
-        "/manager/profil",
-        "/manager/favorites",
-        "/manager/taches",
-        "/manager/notifications",
-      ].includes(path));
+      (role === "admin" &&
+        [
+          "/admin/dashboard",
+          "/admin/projets",
+          "/admin/employes",
+          "/admin/profil",
+          "/admin/taches",
+          "/admin/notifications",
+        ].includes(path)) ||
+      (role === "manager" &&
+        [
+          "/manager/dashboard",
+          "/manager/projets",
+          "/manager/employes",
+          "/manager/profil",
+          "/manager/favorites",
+          "/manager/taches",
+          "/manager/notifications",
+        ].includes(path)));
 
   const renderSidebar = () => {
     if (!shouldShowSidebar) return null;
@@ -68,187 +73,185 @@ function App() {
   };
 
   return (
-    <div className="app-layout">
+    <>
       <ToastContainer />
-      <div className="sidebar">{renderSidebar()}</div>
-
-      <div className="main-content">
+      {isPublicRoute ? (
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/employe/dashboard"
-            element={
-              <ProtectedRoute role={"employee"}>
-                <StatsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/employee/notifications"
-            element={
-              <ProtectedRoute role="employee">
-                <NotificationsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/employe/projets"
-            element={
-              <ProtectedRoute role="employee">
-                <ProjectEmployePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/employe/taches"
-            element={
-              <ProtectedRoute role="employee">
-                <Taches />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/employe/favorites"
-            element={
-              <ProtectedRoute role="employee">
-                <Favorites />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/employe/profil"
-            element={
-              <ProtectedRoute role="employee">
-                <Profil />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/employe/notifications"
-            element={
-              <ProtectedRoute role="employee">
-                <Profil />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manager/dashboard"
-            element={
-              <ProtectedRoute role="manager">
-                <StatsPageManager />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manager/notifications"
-            element={
-              <ProtectedRoute role="manager">
-                <NotificationsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manager/projets"
-            element={
-              <ProtectedRoute role="manager">
-                <ProjectsPageManager/>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manager/employes"
-            element={
-              <ProtectedRoute role="manager">
-                <Employes />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manager/favorites"
-            element={
-              <ProtectedRoute role="manager">
-                <Favorites />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manager/taches"
-            element={
-              <ProtectedRoute role="manager">
-                <TasksPageManager />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manager/profil"
-            element={
-              <ProtectedRoute role="manager">
-                <ProfilPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute role="admin">
-                <StatsPageAdmin />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/projets"
-            element={
-              <ProtectedRoute role="admin">
-                <ProjetsAdmin />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/notifications"
-            element={
-              <ProtectedRoute role="admin">
-                <NotificationsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/employes"
-            element={
-              <ProtectedRoute role="admin">
-                <Employes />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/employes/:id/dashboard"
-            element={
-              <ProtectedRoute role={["admin"]}>
-                <StatsPageWrapper />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/admin/taches"
-            element={
-              <ProtectedRoute role="admin">
-                <TasksPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/profil"
-            element={
-              <ProtectedRoute role="admin">
-                <ProfilPage />
-              </ProtectedRoute>
-            }
-          />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
-      </div>
-    </div>
+      ) : (
+        <div className="app-layout">
+          <div className="sidebar">{renderSidebar()}</div>
+          <div className="main-content">
+            <Routes>
+              <Route
+                path="/employe/dashboard"
+                element={
+                  <ProtectedRoute role={"employee"}>
+                    <StatsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employee/notifications"
+                element={
+                  <ProtectedRoute role="employee">
+                    <NotificationsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employe/projets"
+                element={
+                  <ProtectedRoute role="employee">
+                    <ProjectEmployePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employe/taches"
+                element={
+                  <ProtectedRoute role="employee">
+                    <Taches />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employe/favorites"
+                element={
+                  <ProtectedRoute role="employee">
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employe/profil"
+                element={
+                  <ProtectedRoute role="employee">
+                    <Profil />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager/dashboard"
+                element={
+                  <ProtectedRoute role="manager">
+                    <StatsPageManager />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager/notifications"
+                element={
+                  <ProtectedRoute role="manager">
+                    <NotificationsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager/projets"
+                element={
+                  <ProtectedRoute role="manager">
+                    <ProjectsPageManager/>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager/employes"
+                element={
+                  <ProtectedRoute role="manager">
+                    <Employes />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager/favorites"
+                element={
+                  <ProtectedRoute role="manager">
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager/taches"
+                element={
+                  <ProtectedRoute role="manager">
+                    <TasksPageManager />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager/profil"
+                element={
+                  <ProtectedRoute role="manager">
+                    <ProfilPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute role="admin">
+                    <StatsPageAdmin />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/projets"
+                element={
+                  <ProtectedRoute role="admin">
+                    <ProjetsAdmin />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/notifications"
+                element={
+                  <ProtectedRoute role="admin">
+                    <NotificationsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/employes"
+                element={
+                  <ProtectedRoute role="admin">
+                    <Employes />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/employes/:id/dashboard"
+                element={
+                  <ProtectedRoute role={["admin"]}>
+                    <StatsPageWrapper />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/taches"
+                element={
+                  <ProtectedRoute role="admin">
+                    <TasksPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/profil"
+                element={
+                  <ProtectedRoute role="admin">
+                    <ProfilPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
