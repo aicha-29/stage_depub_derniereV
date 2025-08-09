@@ -7,6 +7,8 @@ import GlobalStats from "../../components/admin/stats/GlobalStats";
 import DailyStats from "../../components/admin/stats/DailyStats";
 import MonthlyStats from "../../components/admin/stats/MonthlyStats";
 import YearlyStats from "../../components/admin/stats/YearlyStats";
+import { getSocket } from '../../utils/socket';
+import { toast } from 'react-toastify';
 import "./adminStats.css";
 
 const StatsPageAdmin = () => {
@@ -15,6 +17,24 @@ const StatsPageAdmin = () => {
   const [statsData, setStatsData] = useState(null);
   const [params, setParams] = useState({});
   const [error, setError] = useState(null);
+      useEffect(() => {
+         const token = localStorage.getItem("token");
+         const user = JSON.parse(localStorage.getItem('user'));
+         const userId = user?._id;
+         
+         // Configuration Socket.IO
+         const socket = getSocket(token, userId);
+  
+         const handleNotification = (notification) => {
+          toast.info(notification.message);
+        };
+        socket.on('new_notification', handleNotification);
+  
+  
+        return () => {
+        socket.off('new_notification', handleNotification);
+      };
+    }, []);
 
   const fetchStats = async (type, params = {}) => {
     try {

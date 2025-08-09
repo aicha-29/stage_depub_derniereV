@@ -1,4 +1,3 @@
-///////////////////
 import React, { useState, useEffect } from "react";
 import TaskCard from "../../components/admin/TaskCard.jsx";
 import "./TasksPage.css";
@@ -6,6 +5,8 @@ import { FiSearch, FiPlus } from "react-icons/fi";
 import TaskAddForm from "./TaskAddForm.jsx";
 import TaskEditForm from "./TaskEditForm.jsx";
 import axios from "axios";
+import { getSocket } from "../../utils/socket";
+import { toast } from 'react-toastify';
 
 const TasksPage = () => {
   const [tasks, setTasks] = useState([]);
@@ -16,11 +17,30 @@ const TasksPage = () => {
   const [statusFilter, setStatusFilter] = useState("Toutes");
   const [projectFilter, setProjectFilter] = useState("Tous");
   const [employeeFilter, setEmployeeFilter] = useState("Tous");
+  const [taskTypeFilter, setTaskTypeFilter] = useState("Tous"); // Nouveau state pour le filtre de type
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user?._id;
+    
+    // Configuration Socket.IO
+    const socket = getSocket(token, userId);
+
+    const handleNotification = (notification) => {
+      toast.info(notification.message);
+    };
+    socket.on('new_notification', handleNotification);
+
+    return () => {
+      socket.off('new_notification', handleNotification);
+    };
+  }, []);
 
   const fetchTasks = async () => {
     try {
@@ -98,8 +118,13 @@ const TasksPage = () => {
       );
     }
 
+    // Nouveau filtre par type de tâche
+    if (taskTypeFilter !== "Tous") {
+      result = result.filter((task) => task.type === taskTypeFilter);
+    }
+
     setFilteredTasks(result);
-  }, [searchTerm, statusFilter, projectFilter, employeeFilter, tasks]);
+  }, [searchTerm, statusFilter, projectFilter, employeeFilter, taskTypeFilter, tasks]);
 
   const handelTaskAdd = async () => {
     setShowModal(false);
@@ -220,6 +245,21 @@ const TasksPage = () => {
                 {uniqueEmployees.map((emp, i) => (
                   <option key={i}>{emp}</option>
                 ))}
+              </select>
+            </div>
+
+            {/* Nouveau filtre pour le type de tâche */}
+            <div className="filter-wrapper">
+              <label>Type : </label>
+              <select
+                className="filter-select"
+                value={taskTypeFilter}
+                onChange={(e) => setTaskTypeFilter(e.target.value)}
+                style={{ fontSize: "1.2rem" }}
+              >
+                <option>Tous</option>
+                <option value="daily">Daily</option>
+                <option value="long">Long</option>
               </select>
             </div>
           </div>

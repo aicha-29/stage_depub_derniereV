@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FavoritesComp from "../../components/employe/FavoritesComp";
+import { getSocket } from '../../utils/socket';
+import { toast } from 'react-toastify';
 import { FiSearch } from "react-icons/fi";
 const Favorites = () => {
   const [tasksFav, setTasksFav] = useState([]);
@@ -13,6 +15,24 @@ const Favorites = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [projects, setProjects] = useState([]);
+      useEffect(() => {
+         const token = localStorage.getItem("token");
+         const user = JSON.parse(localStorage.getItem('user'));
+         const userId = user?._id;
+         
+         // Configuration Socket.IO
+         const socket = getSocket(token, userId);
+  
+         const handleNotification = (notification) => {
+          toast.info(notification.message);
+        };
+        socket.on('new_notification', handleNotification);
+  
+  
+        return () => {
+        socket.off('new_notification', handleNotification);
+      };
+    }, []);
   const fetchFav = async () => {
     try {
       const res = await axios.get(

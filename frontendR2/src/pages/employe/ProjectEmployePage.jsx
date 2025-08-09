@@ -19,12 +19,11 @@ const ProjectEmployePage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-     const user = JSON.parse(localStorage.getItem('user'));
-      const userId = user?._id;
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user?._id;
+    
     // Configuration Socket.IO
     const socket = getSocket(token, userId);
-
-    
 
     // Gestionnaires d'événements
     const handleProjectCreated = (projectWithUrls) => {
@@ -50,13 +49,54 @@ const ProjectEmployePage = () => {
       toast.info(notification.message);
     };
 
-  
+    const handleProjectUnassigned = (data) => {
+      const { projectId, notification } = data;
+      
+      // Supprimer le projet de la liste
+      setProjects(prev => prev.filter(proj => proj._id !== projectId));
+      
+      // Afficher la notification
+      toast.warning(notification.message);
+    };
+
+    const handleProjectAssigned = (data) => {
+      const { project, notification } = data;
+      
+      // Ajouter le projet à la liste s'il n'existe pas déjà
+      setProjects(prev => {
+        const exists = prev.some(p => p._id === project._id);
+        return exists ? prev : [...prev, project];
+      });
+      
+      // Afficher la notification
+      toast.success(notification.message);
+    };
+
+    const handleRefreshProjects = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5001/api/employee/projects/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setProjects(res.data);
+        toast.info("Liste des projets mise à jour");
+      } catch (err) {
+        console.error("Erreur rafraîchissement projets :", err);
+      }
+    };
 
     // Écouteurs d'événements
     socket.on('project_created', handleProjectCreated);
     socket.on('project_updated', handleProjectUpdated);
     socket.on('project_deleted', handleProjectDeleted);
     socket.on('new_notification', handleNotification);
+    socket.on('project_unassigned', handleProjectUnassigned);
+    socket.on('project_assigned', handleProjectAssigned);
+    socket.on('refresh_projects', handleRefreshProjects);
 
     // Chargement initial des projets
     const fetchData = async () => {
@@ -81,12 +121,14 @@ const ProjectEmployePage = () => {
     fetchData();
 
     // Nettoyage
-    return () => {
+   return () => {
       socket.off('project_created', handleProjectCreated);
       socket.off('project_updated', handleProjectUpdated);
       socket.off('project_deleted', handleProjectDeleted);
       socket.off('new_notification', handleNotification);
-      
+      socket.off('project_unassigned', handleProjectUnassigned);
+      socket.off('project_assigned', handleProjectAssigned);
+      socket.off('refresh_projects', handleRefreshProjects);
     };
   }, []);
 

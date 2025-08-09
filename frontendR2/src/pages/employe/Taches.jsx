@@ -6,6 +6,8 @@ import TaskEmployeForm from "../../components/employe/TaskEmployeForm.jsx";
 import TaskEmployeUpdate from "../../components/employe/TaskEmployeUpdate.jsx";
 import TaskAddForm from "../admin/TaskAddForm.jsx";
 import TaskEditForm from "../admin/TaskEditForm.jsx";
+import { getSocket } from '../../utils/socket';
+import { toast } from 'react-toastify';
 import axios from "axios";
 
 const Taches = () => {
@@ -36,6 +38,24 @@ const Taches = () => {
       console.log("erreur lors de la récuppération du role", error);
     }
   };
+     useEffect(() => {
+         const token = localStorage.getItem("token");
+         const user = JSON.parse(localStorage.getItem('user'));
+         const userId = user?._id;
+         
+         // Configuration Socket.IO
+         const socket = getSocket(token, userId);
+  
+         const handleNotification = (notification) => {
+          toast.info(notification.message);
+        };
+        socket.on('new_notification', handleNotification);
+  
+  
+        return () => {
+        socket.off('new_notification', handleNotification);
+      };
+    }, []);
   useEffect(() => {
     fetchRole();
   }, []);

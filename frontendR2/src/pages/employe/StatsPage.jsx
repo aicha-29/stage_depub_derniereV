@@ -9,6 +9,8 @@ import EmployeeStatsDashboard from "../../components/employe/stats/GlobalStats";
 import DailyStats from "../../components/employe/stats/DailyStats";
 import MonthlyStats from "../../components/employe/stats/MonthlyStats";
 import YearlyStats from "../../components/employe/stats/YearlyStats";
+import { getSocket } from '../../utils/socket';
+import { toast } from 'react-toastify';
 import "./stats.css";
 
 const StatsPage = ({ employeeId }) => {
@@ -55,12 +57,29 @@ const StatsPage = ({ employeeId }) => {
       setLoading(false);
     }
   };
+    useEffect(() => {
+       const token = localStorage.getItem("token");
+       const user = JSON.parse(localStorage.getItem('user'));
+       const userId = user?._id;
+       
+       // Configuration Socket.IO
+       const socket = getSocket(token, userId);
 
+       const handleNotification = (notification) => {
+        toast.info(notification.message);
+      };
+      socket.on('new_notification', handleNotification);
+
+
+      return () => {
+      socket.off('new_notification', handleNotification);
+    };
+  }, []);
   const handlePeriodChange = (period) => {
     setParams(period);
     fetchStats(period.type, period);
   };
-
+   
   useEffect(() => {
     fetchStats("global");
   }, [employeeId]); // Important pour recharger si l'ID change

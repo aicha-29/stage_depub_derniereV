@@ -135,6 +135,7 @@ exports.createProject = async (req, res) => {
                 "new_notification",
                 notification
               );
+              io.to(`user_${employeeId}`).emit("refresh_projects");
             }
           );
 
@@ -262,6 +263,214 @@ exports.getProjectDetails = async (req, res) => {
   }
 };
 
+// exports.updateProject = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const {
+//       name,
+//       description,
+//       company,
+//       city,
+//       endDate,
+//       status,
+//       priority,
+//       removeLogo,
+//     } = req.body;
+
+//     let assignedEmployeesIds = req.body.assignedEmployeesIds;
+
+//     // Conversion en tableau si string
+//     if (typeof assignedEmployeesIds === "string") {
+//       assignedEmployeesIds = [assignedEmployeesIds];
+//     }
+//     // Forcer tableau vide si autre chose
+//     if (!Array.isArray(assignedEmployeesIds)) {
+//       assignedEmployeesIds = [];
+//     }
+
+//     const project = await Project.findById(id);
+//     if (!project) {
+//       if (req.file) fs.unlinkSync(req.file.path);
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Projet non trouvé" });
+//     }
+
+//     // Sauvegarder les anciens employés assignés avant la mise à jour
+//     const oldAssignedEmployees = project.assignedEmployees.map(id => id.toString());
+
+//     const oldLogo = project.logo ? path.join("public", project.logo) : null;
+//     const oldThumbnail = project.thumbnail
+//       ? path.join("public", project.thumbnail)
+//       : null;
+
+//     // Mise à jour des champs
+//     project.name = name || project.name;
+//     project.description = description || project.description;
+//     project.company = company || project.company;
+//     project.city = city || project.city;
+//     project.endDate = endDate || project.endDate;
+//     project.status = status || project.status;
+//     project.priority = priority || project.priority;
+//     project.updatedAt = new Date();
+
+//     // Gestion du logo
+//     if (removeLogo === "true" && project.logo) {
+//       if (fs.existsSync(oldLogo)) fs.unlinkSync(oldLogo);
+//       if (fs.existsSync(oldThumbnail)) fs.unlinkSync(oldThumbnail);
+//       project.logo = null;
+//       project.thumbnail = null;
+//     } else if (req.file?.logoPath) {
+//       if (fs.existsSync(oldLogo)) fs.unlinkSync(oldLogo);
+//       if (fs.existsSync(oldThumbnail)) fs.unlinkSync(oldThumbnail);
+//       project.logo = req.file.logoPath;
+//       project.thumbnail = req.file.thumbnail;
+//     }
+
+//     // Validation et nettoyage des assignedEmployeesIds
+//     if (assignedEmployeesIds !== undefined) {
+//       if (assignedEmployeesIds.length > 0) {
+//         // Nettoyer les IDs invalides (null, undefined, chaîne vide)
+//         const cleanedEmployeeIds = assignedEmployeesIds
+//           .filter((id) => id)
+//           .filter((id) => mongoose.Types.ObjectId.isValid(id));
+
+//         if (cleanedEmployeeIds.length !== assignedEmployeesIds.length) {
+//           if (req.file) fs.unlinkSync(req.file.path);
+//           return res.status(400).json({
+//             success: false,
+//             message: "Certains IDs employés assignés sont invalides",
+//           });
+//         }
+
+//         // Rechercher les employés avec les rôles acceptés
+//         const employees = await User.find({
+//           _id: { $in: cleanedEmployeeIds },
+//           $or: [{ role: "employee" }, { role: "manager" }],
+//         }).select("_id");
+
+//         const foundIds = employees.map((emp) => emp._id.toString());
+//         const missingIds = cleanedEmployeeIds.filter(
+//           (id) => !foundIds.includes(id)
+//         );
+
+//         if (missingIds.length > 0) {
+//           if (req.file) fs.unlinkSync(req.file.path);
+//           return res.status(404).json({
+//             success: false,
+//             message:
+//               "Certains utilisateurs assignés n'existent pas ou n'ont pas un rôle valide",
+//             missingIds,
+//           });
+//         }
+
+//         project.assignedEmployees = employees.map((emp) => emp._id);
+//       } else {
+//         project.assignedEmployees = [];
+//       }
+//     }
+
+//     await project.save();
+
+//     const updatedProject = await Project.findById(id)
+//       .populate({
+//         path: "assignedEmployees",
+//         select: "name position profilePhoto profilePhotoThumb cin email",
+//         match: { role: { $in: ["employee", "manager"] } },
+//       })
+//       .lean();
+
+//     const newProject = {
+//       ...updatedProject,
+//       ...buildImageUrls(req, updatedProject),
+//     };
+
+//     const io = req.app.get("io");
+
+//     // Trouver les employés qui ont été désassignés
+//     const removedEmployees = oldAssignedEmployees.filter(
+//       id => !project.assignedEmployees.includes(id)
+//     );
+
+//     // Envoyer des notifications spécifiques aux employés désassignés
+//     if (removedEmployees.length > 0) {
+//       const sender = await User.findById(req.user._id).select("name");
+      
+//       const notificationPromises = removedEmployees.map(async (employeeId) => {
+//         const notification = new Notification({
+//           recipient: employeeId,
+//           sender: req.user._id,
+//           project: project._id,
+//           message: `Vous avez été désassigné du projet "${project.name}" par l'administrateur ${sender.name}`,
+//           type: "project_unassigned",
+//         });
+//         await notification.save();
+
+//         // Envoyer un événement spécifique pour la désassignation
+//         io.to(`user_${employeeId}`).emit("project_unassigned", {
+//           projectId: project._id,
+//           notification
+//         });
+
+//         // Demander à l'employé de rafraîchir ses projets
+//         io.to(`user_${employeeId}`).emit("refresh_projects");
+//       });
+
+//       await Promise.all(notificationPromises);
+//     }
+
+//     // Envoyer les mises à jour aux utilisateurs concernés
+//     const allRecipients = [req.user._id, ...project.assignedEmployees];
+//     allRecipients.forEach((userId) => {
+//       io.to(`user_${userId}`).emit("project_updated", newProject);
+//     });
+
+//     // Émettre des notifications pour les employés assignés
+//     if (assignedEmployeesIds !== undefined) {
+//       const sender = await User.findById(req.user._id).select("name");
+//       const notificationPromises = project.assignedEmployees.map(
+//         async (employeeId) => {
+//           // Ne pas notifier les employés qui viennent d'être désassignés
+//           if (!removedEmployees.includes(employeeId.toString())) {
+//             const notification = new Notification({
+//               recipient: employeeId,
+//               sender: req.user._id,
+//               project: project._id,
+//               message: `Le projet "${project.name}" a été mis à jour par "${sender.name}"`,
+//               type: "project_updated",
+//             });
+//             await notification.save();
+//             io.to(`user_${employeeId}`).emit("new_notification", notification);
+//           }
+//         }
+//       );
+
+//       await Promise.all(notificationPromises);
+//     }
+
+//     res.json({
+//       success: true,
+//       data: newProject,
+//     });
+//   } catch (error) {
+//     console.error("Error updating project:", error);
+//     if (req.file) {
+//       fs.unlinkSync(req.file.path);
+//       if (req.file.thumbnail) {
+//         fs.unlinkSync(path.join("public", req.file.thumbnail));
+//       }
+//     }
+//     res.status(500).json({
+//       success: false,
+//       message: "Erreur serveur lors de la mise à jour",
+//       error: error.message,
+//     });
+//   }
+// };
+
+
+
+
 exports.updateProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -295,6 +504,9 @@ exports.updateProject = async (req, res) => {
         .json({ success: false, message: "Projet non trouvé" });
     }
 
+    // Sauvegarder les anciens employés assignés avant la mise à jour
+    const oldAssignedEmployees = project.assignedEmployees.map(id => id.toString());
+
     const oldLogo = project.logo ? path.join("public", project.logo) : null;
     const oldThumbnail = project.thumbnail
       ? path.join("public", project.thumbnail)
@@ -326,7 +538,7 @@ exports.updateProject = async (req, res) => {
     // Validation et nettoyage des assignedEmployeesIds
     if (assignedEmployeesIds !== undefined) {
       if (assignedEmployeesIds.length > 0) {
-        // Nettoyer les IDs invalides (null, undefined, chaîne vide)
+        // Nettoyer les IDs invalides
         const cleanedEmployeeIds = assignedEmployeesIds
           .filter((id) => id)
           .filter((id) => mongoose.Types.ObjectId.isValid(id));
@@ -339,11 +551,10 @@ exports.updateProject = async (req, res) => {
           });
         }
 
-        // Rechercher les employés avec les rôles acceptés
+        // Rechercher les employés
         const employees = await User.find({
           _id: { $in: cleanedEmployeeIds },
           $or: [{ role: "employee" }, { role: "manager" }],
-          // role: { $in: ["employee", "manager"] },
         }).select("_id");
 
         const foundIds = employees.map((emp) => emp._id.toString());
@@ -384,33 +595,153 @@ exports.updateProject = async (req, res) => {
 
     const io = req.app.get("io");
 
-    const allRecipients = [req.user._id, ...project.assignedEmployees];
+    // Détecter les employés désassignés
+    const removedEmployees = oldAssignedEmployees.filter(
+      id => !project.assignedEmployees.includes(id)
+    );
 
-    // Envoyer à tous les utilisateurs concernés
+    // Détecter les nouveaux employés assignés
+    const newAssignedEmployees = project.assignedEmployees
+      .map(id => id.toString())
+      .filter(id => !oldAssignedEmployees.includes(id));
+
+    // Gestion des désassignations
+    if (removedEmployees.length > 0) {
+      const sender = await User.findById(req.user._id).select("name");
+      
+      const unassignPromises = removedEmployees.map(async (employeeId) => {
+        const notification = new Notification({
+          recipient: employeeId,
+          sender: req.user._id,
+          project: project._id,
+          message: `Vous avez été désassigné du projet "${project.name}" par l'administrateur ${sender.name}`,
+          type: "project_unassigned",
+        });
+        await notification.save();
+
+        io.to(`user_${employeeId}`).emit("project_unassigned", {
+          projectId: project._id,
+          notification
+        });
+
+        io.to(`user_${employeeId}`).emit("refresh_projects");
+        io.to(`user_${employeeId}`).emit("new_notification",notification);
+      });
+
+      await Promise.all(unassignPromises);
+    }
+
+    // Gestion des nouvelles assignations
+    if (newAssignedEmployees.length > 0) {
+      const sender = await User.findById(req.user._id).select("name");
+      
+      const assignPromises = newAssignedEmployees.map(async (employeeId) => {
+        const notification = new Notification({
+          recipient: employeeId,
+          sender: req.user._id,
+          project: project._id,
+          message: `Vous avez été assigné au projet "${project.name}" par l'administrateur ${sender.name}`,
+          type: "project_assigned",
+        });
+        await notification.save();
+
+        io.to(`user_${employeeId}`).emit("project_assigned", {
+          project: newProject,
+          notification
+        });
+         io.to(`user_${employeeId}`).emit("new_notification",notification);
+
+      });
+
+      await Promise.all(assignPromises);
+    }
+
+
+
+    const existingAssignedEmployees = project.assignedEmployees
+  .map(id => id.toString())
+  .filter(id => !newAssignedEmployees.includes(id));
+    
+     // Émettre des notifications pour les employés assignés
+    if (existingAssignedEmployees !== undefined) {
+     const sender = await User.findById(req.user._id).select("name");
+      const notificationPromises = existingAssignedEmployees.map(
+         async (employeeId) => {
+           // Ne pas notifier les employés qui viennent d'être désassignés
+           if (!removedEmployees.includes(employeeId.toString())) {
+             const notification = new Notification({
+               recipient: employeeId,
+               sender: req.user._id,
+               project: project._id,
+               message: `Le projet "${project.name}" a été mis à jour par "${sender.name}"`,
+               type: "project_updated",
+             });
+             await notification.save();
+             io.to(`user_${employeeId}`).emit("new_notification", notification);
+             
+           }
+         }
+       );
+
+       await Promise.all(notificationPromises);
+     }
+
+
+       if (newAssignedEmployees.length>0) {
+     const sender = await User.findById(req.user._id).select("name");
+      const notificationP = existingAssignedEmployees.map(
+         async (employeeId) => {
+           // Ne pas notifier les employés qui viennent d'être désassignés
+           if (!removedEmployees.includes(employeeId.toString())) {
+             const notification = new Notification({
+               recipient: employeeId,
+               sender: req.user._id,
+               project: project._id,
+               message: `"${sender.name}"a ajouté quelque membre(s) au projet "${project.name}" `,
+               type: "project_updated",
+             });
+             await notification.save();
+             io.to(`user_${employeeId}`).emit("new_notification", notification);
+             
+           }
+         }
+       );
+
+       await Promise.all(notificationP);
+     }
+
+
+
+     if (removedEmployees.length>0) {
+     const sender = await User.findById(req.user._id).select("name");
+      const notificationL = existingAssignedEmployees.map(
+         async (employeeId) => {
+           // Ne pas notifier les employés qui viennent d'être désassignés
+           if (!removedEmployees.includes(employeeId.toString())) {
+             const notification = new Notification({
+               recipient: employeeId,
+               sender: req.user._id,
+               project: project._id,
+               message: `"${sender.name}"a retiré qluelque membre(s) de  projet "${project.name}" `,
+               type: "project_updated",
+             });
+             await notification.save();
+             io.to(`user_${employeeId}`).emit("new_notification", notification);
+             
+           }
+         }
+       );
+
+       await Promise.all(notificationL);
+     }
+
+
+    // Envoyer les mises à jour générales
+    const allRecipients = [req.user._id, ...project.assignedEmployees];
     allRecipients.forEach((userId) => {
       io.to(`user_${userId}`).emit("project_updated", newProject);
+        
     });
-
-    // Émettre des notifications si des employés ont été modifiés
-    if (assignedEmployeesIds !== undefined) {
-      const sender = await User.findById(req.user._id).select("name");
-      const notificationPromises = project.assignedEmployees.map(
-        async (employeeId) => {
-          const notification = new Notification({
-            recipient: employeeId,
-            sender: req.user._id,
-            project: project._id,
-            message: `Le projet "${project.name}" a été mis à jour par "${sender.name}"`,
-            type: "project_updated",
-          });
-          await notification.save();
-
-          io.to(`user_${employeeId}`).emit("new_notification", notification);
-        }
-      );
-
-      await Promise.all(notificationPromises);
-    }
 
     res.json({
       success: true,
