@@ -1,0 +1,108 @@
+.notification-icon-wrapper {
+  position: relative;
+  cursor: pointer;
+  margin-right: 1rem;
+  font-size: 2.8rem;
+  color: #021b4e; /* couleur douce, cohérente avec ton thème */
+}
+
+.bell-icon-nav {
+  font-size: 3rem;
+  transition: color 0.3s ease;
+}
+
+.bell-icon-nav:hover {
+  color: #e3959c; /* rose doux */
+}
+
+.notification-badge {
+  background-color: #f57c7c; /* rouge doux */
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.2);
+}
+
+.notification-popover {
+  width: 32rem;
+  max-height: 45rem;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.1);
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+}
+
+.mark-all-btn {
+  font-size: 1.2rem;
+  color: #f57c7c;
+}
+
+.notification-list {
+  max-height: 30rem;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 1rem;
+  border-radius: 1rem;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.notification-item.unread {
+  background-color: #fff3f3; /* fond pour non lues */
+  font-weight: bold;
+}
+
+.notification-item:hover {
+  background-color: #fef0f0;
+}
+
+.notification-message {
+  font-size: 1.4rem;
+  color: #374151;
+}
+
+.notification-time {
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+.notification-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.view-all-btn {
+  font-size: 1.3rem;
+  color: #557ef0;
+}
+
+/* ... styles existants ... */
+
+.notification-item .ant-list-item-meta {
+  flex-grow: 1;
+}
+
+.delete-notification-btn {
+  margin-left: 10px;
+  padding: 0 5px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.notification-item:hover .delete-notification-btn {
+  opacity: 1;
+}
+
+/* ... autres styles existants ... */

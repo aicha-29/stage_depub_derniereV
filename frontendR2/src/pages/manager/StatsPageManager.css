@@ -1,0 +1,72 @@
+/* StatsPageManager.css */
+
+.manager-dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-selector-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  border: 1px solid #e8e8e8;
+}
+
+.dashboard-radio-group {
+  width: 100%;
+  display: flex;
+}
+
+.radio-btn {
+  flex: 1;
+  text-align: center;
+  height: 40px;
+  line-height: 38px;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.radio-btn-admin {
+  background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
+  color: #5a5a5a;
+  border-color: #d9d9d9;
+}
+
+.radio-btn-admin:hover {
+  background: linear-gradient(135deg, #e8d9dc 0%, #d3e1fa 100%);
+  transform: translateY(-2px);
+}
+
+.radio-btn-admin.ant-radio-button-wrapper-checked {
+  background: linear-gradient(135deg, #d8c4cd 0%, #b8cce8 100%);
+  color: #333;
+  border-color: #c3c3c3;
+  box-shadow: 0 4px 12px rgba(155, 155, 155, 0.2);
+}
+
+.radio-btn-employee {
+  background: linear-gradient(135deg, #e8f5e9 0%, #f0f4c3 100%);
+  color: #5a5a5a;
+  border-color: #d9d9d9;
+}
+
+.radio-btn-employee:hover {
+  background: linear-gradient(135deg, #d7ebd8 0%, #e6e9b7 100%);
+  transform: translateY(-2px);
+}
+
+.radio-btn-employee.ant-radio-button-wrapper-checked {
+  background: linear-gradient(135deg, #c8e6c9 0%, #dce775 100%);
+  color: #333;
+  border-color: #c3c3c3;
+  box-shadow: 0 4px 12px rgba(155, 155, 155, 0.2);
+}
+
+/* Animation lorsque le bouton est cliqué */
+@keyframes radioClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.radio-btn:active {
+  animation: radioClick 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}

@@ -1,0 +1,23 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 20rem;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #001f3f; /* couleur par défaut */
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.main-content {
+  margin-left: 20rem; /* important pour que les pages ne chevauchent pas la navbar */
+  width: calc(100% - 20rem);
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
