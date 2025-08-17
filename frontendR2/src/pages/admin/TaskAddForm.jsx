@@ -14,7 +14,11 @@ const initialState = {
   intervention: "on_site",
 };
 
+<<<<<<< HEAD
 const TaskAddForm = ({onAddTask , onClose }) => {
+=======
+const TaskAddForm = ({ onTaskAdded, onClose }) => {
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
@@ -54,7 +58,10 @@ const TaskAddForm = ({onAddTask , onClose }) => {
         ]);
         setProjects(projectsRes.data);
         setUsers(usersRes.data);
+<<<<<<< HEAD
       
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       } catch (err) {
         setError("Erreur de chargement des données.");
         console.error(err);
@@ -75,7 +82,11 @@ const TaskAddForm = ({onAddTask , onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (!taskData.title || !taskData.type || !taskData.projectId) {
       setError("Veuillez remplir tous les champs obligatoires.");
       return;
@@ -99,7 +110,11 @@ const TaskAddForm = ({onAddTask , onClose }) => {
         }
       );
 
+<<<<<<< HEAD
       if (onAddTask) onAddTask(response.data.task);
+=======
+      if (onTaskAdded) onTaskAdded(response.data.task);
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
       // Réinitialisation
       setTaskData({
@@ -113,7 +128,10 @@ const TaskAddForm = ({onAddTask , onClose }) => {
         progress: 0,
         intervention: "on_site",
       });
+<<<<<<< HEAD
         onClose();
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       console.log("tache", response.data.task);
     } catch (err) {
       setError(err.response?.data?.message || "Erreur serveur");
@@ -121,6 +139,7 @@ const TaskAddForm = ({onAddTask , onClose }) => {
     }
   };
 
+<<<<<<< HEAD
 //   return (
 //       <div className={styles.modalOverlay}>
 //     <form className={styles.addTaskForm} onSubmit={handleSubmit}>
@@ -398,4 +417,131 @@ const TaskAddForm = ({onAddTask , onClose }) => {
     </div>
   );
 };
+=======
+  return (
+    <form className={styles.addTaskForm} onSubmit={handleSubmit}>
+      <h2 style={{ fontSize: "1.7rem", color: "rgba(80, 80, 84, 1)" }}>
+        Ajouter une tâche
+      </h2>
+      <FiX
+        size={18}
+        style={{
+          color: "rgba(80, 80, 84, 1)",
+          position: "absolute",
+          left: "24.5rem",
+          top: "2.2rem",
+          cursor: "pointer",
+        }}
+        onClick={onClose}
+      />
+
+      {error && <div className={styles.errorMessage}>{error}</div>}
+
+      <label>Titre *</label>
+      <input
+        type="text"
+        name="title"
+        value={taskData.title}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Description</label>
+      <textarea
+        name="description"
+        value={taskData.description}
+        onChange={handleChange}
+      />
+
+      <label>Type *</label>
+      <select
+        name="type"
+        value={taskData.type}
+        onChange={handleChange}
+        required
+      >
+        <option value="daily">Journalier</option>
+        <option value="long">Long terme</option>
+      </select>
+
+      {taskData.type === "long" && (
+        <>
+          <label>Deadline *</label>
+          <input
+            type="date"
+            name="deadline"
+            value={taskData.deadline}
+            onChange={handleChange}
+            required
+          />
+        </>
+      )}
+
+      <label>Statut</label>
+      <select name="status" value={taskData.status} onChange={handleChange}>
+        <option value="pending">En attente</option>
+        <option value="inProgress">En cours</option>
+        <option value="completed">Complétée</option>
+        <option value="late">En retard</option>
+      </select>
+
+      <label>Projet *</label>
+      <select
+        name="projectId"
+        value={taskData.projectId}
+        onChange={handleChange}
+        required
+      >
+        <option value="">-- Sélectionner un projet --</option>
+        {projects.map((project) => (
+          <option key={project._id} value={project._id}>
+            {project.name}
+          </option>
+        ))}
+      </select>
+
+      <label>Employé assigné</label>
+      <select
+        name="assignedToId"
+        value={taskData.assignedToId}
+        onChange={handleChange}
+      >
+        <option value="">-- Aucun --</option>
+        {users.map((user) => (
+          <option key={user._id} value={user._id}>
+            {user.name}
+          </option>
+        ))}
+      </select>
+
+      <label>Avancement (%)</label>
+      <input
+        type="number"
+        name="progress"
+        value={taskData.progress}
+        onChange={handleChange}
+        min={0}
+        max={100}
+      />
+
+      <label>Type d'intervention</label>
+      <select
+        name="intervention"
+        value={taskData.intervention}
+        onChange={handleChange}
+      >
+        <option value="on_site">Sur site</option>
+        <option value="remote">À distance</option>
+      </select>
+      <div style={{ display: "flex", gap: "2rem" }}>
+        <button type="submit">Créer la tâche</button>
+        <button type="button" onClick={onClose}>
+          Annuler
+        </button>
+      </div>
+    </form>
+  );
+};
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 export default TaskAddForm;

@@ -12,8 +12,12 @@ const initialState = {
   progress: 0,
   intervention: "on_site",
 };
+<<<<<<< HEAD
  const user = JSON.parse(localStorage.getItem('user'));
     const userId = user?._id;
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 const TaskEmployeForm = ({ onTaskAdded, onClose }) => {
   const [taskData, setTaskData] = useState({
     title: "",
@@ -81,7 +85,10 @@ const TaskEmployeForm = ({ onTaskAdded, onClose }) => {
       );
 
       if (onTaskAdded) onTaskAdded(response.data.task);
+<<<<<<< HEAD
       
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
       // Réinitialisation
       setTaskData({
@@ -89,8 +96,13 @@ const TaskEmployeForm = ({ onTaskAdded, onClose }) => {
         description: "",
         type: "daily",
         status: "pending",
+<<<<<<< HEAD
         projectId: taskData.projectId,
         assignedToId:userId ,
+=======
+        projectId: null,
+        assignedToId: null,
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         progress: 0,
         intervention: "on_site",
       });
@@ -101,6 +113,7 @@ const TaskEmployeForm = ({ onTaskAdded, onClose }) => {
     }
   };
 
+<<<<<<< HEAD
 //   return (
 //     <form className={styles.addTaskForm} onSubmit={handleSubmit}>
 //       <div
@@ -323,6 +336,110 @@ const TaskEmployeForm = ({ onTaskAdded, onClose }) => {
         </div>
       </form>
     </div>
+=======
+  return (
+    <form className={styles.addTaskForm} onSubmit={handleSubmit}>
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          alignItems: "center",
+        }}
+      >
+        <h2 style={{ fontSize: "1.7rem", color: "rgba(80, 80, 84, 1)" }}>
+          Ajouter une tâche Pour Moi
+        </h2>
+        <FiX
+          size={18}
+          style={{
+            color: "rgba(80, 80, 84, 1)",
+            position: "absolute",
+            left: "24.5rem",
+            top: "2.2rem",
+            cursor: "pointer",
+          }}
+          onClick={onClose}
+        />
+      </div>
+
+      {error && <div className={styles.errorMessage}>{error}</div>}
+
+      <label>Titre *</label>
+      <input
+        type="text"
+        name="title"
+        value={taskData.title}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Description</label>
+      <textarea
+        name="description"
+        value={taskData.description}
+        onChange={handleChange}
+      />
+
+      <label>Type *</label>
+      <select
+        name="type"
+        value={taskData.type}
+        onChange={handleChange}
+        required
+      >
+        <option value="daily">Journalier</option>
+      </select>
+
+      <label>Statut</label>
+      <select name="status" value={taskData.status} onChange={handleChange}>
+        <option value="pending">En attente</option>
+        <option value="inProgress">En cours</option>
+        <option value="completed">Complétée</option>
+        <option value="late">En retard</option>
+      </select>
+
+      <label>Projet *</label>
+      <select
+        name="projectId"
+        value={taskData.projectId}
+        onChange={handleChange}
+        required
+      >
+        <option value="">-- Sélectionner un projet --</option>
+        {projects.map((project) => (
+          <option key={project._id} value={project._id}>
+            {project.name}
+          </option>
+        ))}
+      </select>
+
+      <label>Avancement (%)</label>
+      <input
+        type="number"
+        name="progress"
+        value={taskData.progress}
+        onChange={handleChange}
+        min={0}
+        max={100}
+      />
+
+      <label>Type d'intervention</label>
+      <select
+        name="intervention"
+        value={taskData.intervention}
+        onChange={handleChange}
+      >
+        <option value="on_site">Sur site</option>
+        <option value="remote">À distance</option>
+      </select>
+      <div style={{ display: "flex", gap: "2rem" }}>
+        <button type="submit">Créer la tâche</button>
+        <button type="button" onClick={onClose}>
+          Annuler
+        </button>
+      </div>
+    </form>
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   );
 };
 

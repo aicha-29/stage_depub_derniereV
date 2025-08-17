@@ -29,7 +29,11 @@ const upload = multer({ storage: storage });
 router.get(
   "/",
   authMiddleware,
+<<<<<<< HEAD
   roleMiddleware.roleMiddleware(["admin", "manager","employee"]),
+=======
+  roleMiddleware.roleMiddleware(["admin", "manager"]),
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   employeesController.getAllEmployeesWithProjects
 );
 

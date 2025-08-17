@@ -8,9 +8,13 @@ import TaskAddForm from "../admin/TaskAddForm.jsx";
 import TaskEditForm from "../admin/TaskEditForm.jsx";
 import { getSocket } from '../../utils/socket';
 import { toast } from 'react-toastify';
+<<<<<<< HEAD
 import {  FiCheckCircle,FiXCircle } from "react-icons/fi";
 import axios from "axios";
 import './Taches.css'
+=======
+import axios from "axios";
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
 const Taches = () => {
   const [tasks, setTasks] = useState([]);
@@ -26,7 +30,10 @@ const Taches = () => {
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
   const [role, setRole] = useState("");
+<<<<<<< HEAD
 const [taskTypeFilter, setTaskTypeFilter] = useState("Tous");
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   const fetchRole = async () => {
     try {
       const res = await axios.get("http://localhost:5001/api/profile", {
@@ -41,12 +48,48 @@ const [taskTypeFilter, setTaskTypeFilter] = useState("Tous");
       console.log("erreur lors de la récuppération du role", error);
     }
   };
+<<<<<<< HEAD
    
+=======
+     useEffect(() => {
+         const token = localStorage.getItem("token");
+         const user = JSON.parse(localStorage.getItem('user'));
+         const userId = user?._id;
+         
+         // Configuration Socket.IO
+         const socket = getSocket(token, userId);
+  
+         const handleNotification = (notification) => {
+          toast.info(notification.message);
+        };
+        socket.on('new_notification', handleNotification);
+  
+  
+        return () => {
+        socket.off('new_notification', handleNotification);
+      };
+    }, []);
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   useEffect(() => {
     fetchRole();
   }, []);
   const fetchTasks = async () => {
     try {
+<<<<<<< HEAD
+=======
+      // const response =
+      //   role === "employee"
+      //     ? await fetch("http://localhost:5001/api/employee/tasks/", {
+      //         headers: {
+      //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //         },
+      //       })
+      //     : await fetch("http://localhost:5001/api/admin/tasks", {
+      //         headers: {
+      //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //         },
+      //       });
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       const response = await fetch(
         "http://localhost:5001/api/employee/tasks/",
         {
@@ -68,6 +111,7 @@ const [taskTypeFilter, setTaskTypeFilter] = useState("Tous");
     }
   };
 
+<<<<<<< HEAD
     useEffect(() => {
          const token = localStorage.getItem("token");
          const user = JSON.parse(localStorage.getItem('user'));
@@ -187,6 +231,8 @@ const formatTask = (task) => {
     } : null
   };
 };
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -237,11 +283,17 @@ const formatTask = (task) => {
     if (projectFilter !== "Tous") {
       result = result.filter((task) => task.project?.name === projectFilter);
     }
+<<<<<<< HEAD
      if (taskTypeFilter !== "Tous") {
     result = result.filter((task) => task.type === taskTypeFilter);
   }
     setFilteredTasks(result);
   }, [searchTerm, statusFilter, projectFilter, tasks,taskTypeFilter,]);
+=======
+
+    setFilteredTasks(result);
+  }, [searchTerm, statusFilter, projectFilter, tasks]);
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   const handelTaskAdd = async () => {
     setShowModal(false);
@@ -289,6 +341,7 @@ const formatTask = (task) => {
     ...new Set(tasks.map((task) => task.project?.name).filter(Boolean)),
   ];
   console.log("users", users);
+<<<<<<< HEAD
   
   // Ajoutez cette fonction dans votre composant Taches
 const validateDay = async () => {
@@ -329,12 +382,15 @@ const cancelDayValidation = async () => {
 };
 
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   return (
     <div className="tasks-page-container">
       <main className="tasks-main-content">
         <div className="header-section">
           <h1 className="projet-page-title">Tâches</h1>
 
+<<<<<<< HEAD
           <div className="action-buttons">
     <button className="btn btn-add" onClick={() => setShowModal(true)}>
       <FiPlus className="btn-icon" />
@@ -351,6 +407,16 @@ const cancelDayValidation = async () => {
       Annuler la validation
     </button>
   </div>
+=======
+          <button
+            className="add-employee-btn"
+            onClick={() => setShowModal(true)}
+            style={{ fontSize: "1.4rem" }}
+          >
+            <FiPlus className="add-icon" style={{ fontSize: "1.8rem" }} />
+            Ajouter une tâche
+          </button>
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         </div>
         <div className="search-filter-container">
           <div className="search-wrapper">
@@ -397,6 +463,7 @@ const cancelDayValidation = async () => {
                 ))}
               </select>
             </div>
+<<<<<<< HEAD
             <div className="filter-wrapper">
               <label>Type : </label>
               <select
@@ -410,6 +477,8 @@ const cancelDayValidation = async () => {
                 <option value="long">Long</option>
               </select>
             </div>
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
           </div>
         </div>
 

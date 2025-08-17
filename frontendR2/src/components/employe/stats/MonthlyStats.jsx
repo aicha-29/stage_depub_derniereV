@@ -20,7 +20,11 @@ ChartJS.register(...registerables);
 
 const { Title, Text } = Typography;
 
+<<<<<<< HEAD
 const MonthlyStats = ({ data  }) => {
+=======
+const MonthlyStats = ({ data }) => {
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   if (!data) return null;
 
  const chartOptions = useMemo(() => ({

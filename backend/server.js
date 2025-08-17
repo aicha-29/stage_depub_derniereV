@@ -6,7 +6,11 @@ const cors = require("cors");
 const path = require("path");
 const http = require('http');
 const socketio = require('socket.io');
+<<<<<<< HEAD
 const messageRoutes = require("./routes/message.routes");
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
 
 const notificationRoutes = require('./routes/notification.routes');
@@ -36,7 +40,11 @@ dotenv.config();
 connectDB();
 
 app.use(cors({
+<<<<<<< HEAD
   origin: ["http://localhost:5174","http://localhost:5173","http://localhost:5175"], // ou ajouter d'autres origins si besoin
+=======
+  origin: ["http://localhost:5174","http://localhost:5173"], // ou ajouter d'autres origins si besoin
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   credentials: true
 }));
 
@@ -45,12 +53,19 @@ app.use(express.json());
 
 const io = socketio(server, {
   cors: {
+<<<<<<< HEAD
     origin: ["http://localhost:5174","http://localhost:5173","http://localhost:5175"], // Remplacez par l'URL de votre frontend
+=======
+    origin: ["http://localhost:5174","http://localhost:5173"], // Remplacez par l'URL de votre frontend
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     methods: ["GET", "POST"],
     credentials: true
   }
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 // Routes
 app.use("/api/auth", authRoutes); //Toutes les routes définies dans authRoutes seront préfixées par /api/auth
 app.use("/api/admin/dashboard", adminDashboardRoutes);
@@ -64,7 +79,10 @@ app.use("/api/employee/dashboard", getUsersStats);
 app.use("/api/employee/projects", projectEmployeRoute);
 app.use("/api/employee/tasks", taskEmployeRoute);
 app.use('/api/notifications', notificationRoutes);
+<<<<<<< HEAD
 app.use("/api/messages", messageRoutes);
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
 // Gestion des connexions Socket.IO
 io.on('connection', (socket) => {

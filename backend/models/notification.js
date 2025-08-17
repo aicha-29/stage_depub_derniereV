@@ -20,6 +20,7 @@ const NotificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
+<<<<<<< HEAD
         enum: [
       'project_created', 
       'project_updated', 
@@ -42,6 +43,9 @@ const NotificationSchema = new mongoose.Schema({
       'long_task_deleted',
       'long_task_updated'
     ],
+=======
+    enum: ['project_created', 'project_updated', 'project_deleted', 'task_assigned',"profile_updated","account_created","new_employee","employee_update","employee_deleted","project_unassigned","project_assigned"],
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     required: true
   },
   read: {
@@ -53,6 +57,10 @@ const NotificationSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+<<<<<<< HEAD
 // Index pour améliorer les performances des requêtes
 NotificationSchema.index({ recipient: 1, read: 1, createdAt: -1 });
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 module.exports = mongoose.model('Notification', NotificationSchema);

@@ -1,7 +1,11 @@
 import { Card, Row, Col, Progress, Tag, Divider } from "antd";
 import { CheckCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+<<<<<<< HEAD
 import ProgressChart from "./progressChart2";
+=======
+import ProgressChart from "./ProgressChart";
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
 const MonthlyStats = ({ data }) => {
   if (!data) return null;

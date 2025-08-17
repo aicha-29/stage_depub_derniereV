@@ -3,7 +3,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
+<<<<<<< HEAD
   const { email, password ,remember} = req.body;
+=======
+  const { email, password } = req.body;
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   try {
     const user = await User.findOne({ email });
@@ -14,12 +18,19 @@ exports.login = async (req, res) => {
     if (!isMatch)
       return res.status(401).json({ message: "Mot de passe incorrect" });
 
+<<<<<<< HEAD
     const expiresIn = remember ? "7d" : "1d";
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn }
+=======
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     );
     const userObj = user.toObject();
     delete userObj.password;

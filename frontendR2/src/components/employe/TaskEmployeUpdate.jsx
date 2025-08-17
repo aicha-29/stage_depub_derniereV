@@ -93,12 +93,17 @@ const TaskEmployeUpdate = ({ taskToEdit, projects, onUpdateTask, onClose }) => {
           onChange={handleChange}
         />
 
+<<<<<<< HEAD
          <label>Type</label>
         <div className="read-only-field">
           {taskData.type === "daily" ? "Journalier" : "Long terme"}
         </div>
 
        { /* <select
+=======
+        <label>Type *</label>
+        <select
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
           name="type"
           value={taskData.type}
           onChange={handleChange}
@@ -107,7 +112,11 @@ const TaskEmployeUpdate = ({ taskToEdit, projects, onUpdateTask, onClose }) => {
           <option value="daily">Journalier</option>
           <option value="long">Long terme</option>
         </select>
+<<<<<<< HEAD
 */}
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         {taskData.type === "long" && (
           <>
             <label>Deadline *</label>
@@ -123,7 +132,11 @@ const TaskEmployeUpdate = ({ taskToEdit, projects, onUpdateTask, onClose }) => {
               required
             />
           </>
+<<<<<<< HEAD
         )} 
+=======
+        )}
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
         <label>Statut</label>
         <select name="status" value={taskData.status} onChange={handleChange}>

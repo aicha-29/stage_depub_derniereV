@@ -6,14 +6,20 @@ import axios from "axios";
 import defaultPhoto from "../../assets/images/profil-default.jpeg";
 import { useNavigate } from "react-router-dom";
 import NotificationBell from "../common/NotificationBell";
+<<<<<<< HEAD
 import { useMessaging } from '../../context/MessagingContext'; // Importez le contexte de messagerie
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 //import "./NotificationBell.css"; // Importez le CSS
 import '../common/navbar.css';
 
 
 const NavbarEmploye = () => {
+<<<<<<< HEAD
     const { unreadCount } = useMessaging(); 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   const [menuOpen, setMenuOpen] = useState(false);
   const [profil, setProfil] = useState({});
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -40,9 +46,13 @@ const NavbarEmploye = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
+<<<<<<< HEAD
   const handleProfileClick = () => {
     navigate("/employe/profil");
   };
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   return (
     <>
       {/* Bouton menu pour petits écrans */}
@@ -87,6 +97,7 @@ const NavbarEmploye = () => {
           >
             <i className="fa-solid fa-star"></i>
           </NavLink>
+<<<<<<< HEAD
              <NavLink
               to="/employe/messaging"
               className={({ isActive }) => (isActive ? "activee" : "not-activee")}
@@ -99,6 +110,14 @@ const NavbarEmploye = () => {
               </div>
             </NavLink>
          
+=======
+          <NavLink
+            to="/employe/profil"
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
+          >
+            <i className="fa-solid fa-address-card"></i>
+          </NavLink>
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
           <NavLink
           to="#"
           className={({ isActive }) => (isActive ? "activee" : "not-activee")}
@@ -107,10 +126,15 @@ const NavbarEmploye = () => {
           <NotificationBell />
         </NavLink>
         </div>
+<<<<<<< HEAD
          <div className="profile-sectione">
         <div className="profil-connecte text-white rounded-circle d-flex justify-content-center align-items-center"
          onClick={handleProfileClick}
          style={{ cursor: 'pointer' }}>
+=======
+        
+        <div className="profil-connecte text-white rounded-circle d-flex justify-content-center align-items-center">
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
           <img src={profileImageSrc} alt="Profile" />
         </div>
 
@@ -123,7 +147,10 @@ const NavbarEmploye = () => {
             ></i>
           </button>
         </div>
+<<<<<<< HEAD
         </div>
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       </div>
     </>
   );

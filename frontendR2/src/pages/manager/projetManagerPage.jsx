@@ -225,7 +225,11 @@ const ManagerProjectsPage = () => {
               key={project._id} 
               project={project} 
               onDelete={() => {}} // Pas de suppression pour les managers
+<<<<<<< HEAD
               //handelEditClick={() => {}} // Pas d'édition pour les managers
+=======
+              handelEditClick={() => {}} // Pas d'édition pour les managers
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
               onClick={() => handleCardClick(project)}
             />
           ))

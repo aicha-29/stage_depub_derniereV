@@ -1,5 +1,6 @@
 const Task = require("../../models/task");
 const Project = require("../../models/project");
+<<<<<<< HEAD
 const User =require("../../models/user");
 const mongoose = require("mongoose");
 const DailyValidation = require("../../models/dailyValidation.model");
@@ -63,6 +64,12 @@ exports.getEmployeTask = async (req, res) => {
    
      const io=req.app.get('io');
     await checkLateTasks(io);
+=======
+
+const mongoose = require("mongoose");
+exports.getEmployeTask = async (req, res) => {
+  try {
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     const employeId = req.user._id;
     const tasks = await Task.find({ assignedTo: employeId })
       .populate({
@@ -82,7 +89,10 @@ exports.getEmployeTask = async (req, res) => {
 exports.createDailyTask = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
+<<<<<<< HEAD
    const io = req.app.get('io');
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   try {
     const {
@@ -129,6 +139,7 @@ exports.createDailyTask = async (req, res) => {
     });
 
     const savedTask = await newTask.save({ session });
+<<<<<<< HEAD
  
   const populatedTask = await Task.findById(savedTask._id).session(session)
     .populate({
@@ -146,6 +157,9 @@ exports.createDailyTask = async (req, res) => {
        
       io.emit('task_created', populatedTask);
    
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     await session.commitTransaction();
     session.endSession();
 
@@ -178,21 +192,31 @@ exports.createDailyTask = async (req, res) => {
     });
   }
 };
+<<<<<<< HEAD
 
 
 exports.deleteEmployeTask = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   const io = req.app.get('io');
+=======
+exports.deleteEmployeTask = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   try {
     const taskId = req.params.taskId;
     const userId = req.user._id;
 
     // 1. Vérifier que la tâche existe et récupérer le projet associé
+<<<<<<< HEAD
     const task = await Task.findById(taskId)
     .populate('assignedTo', 'name')
       .populate('project', 'name').session(session);
+=======
+    const task = await Task.findById(taskId).session(session);
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (!task) {
       await session.abortTransaction();
       session.endSession();
@@ -202,6 +226,7 @@ exports.deleteEmployeTask = async (req, res) => {
       await session.abortTransaction();
       session.endSession();
       return res
+<<<<<<< HEAD
         .status(403)
         .json({ message: "Vous n'avez pas le droit de supprimer cette tâche" });
     }
@@ -222,6 +247,17 @@ exports.deleteEmployeTask = async (req, res) => {
      io.emit('task_deleted', taskId);
 
     const projectId = task.project;
+=======
+        .status(404)
+        .json({ message: "tu n a pas le droit de supprimer cette tache" });
+    }
+
+    const projectId = task.project;
+
+    // 2. Supprimer la tâche
+    await Task.deleteOne({ _id: taskId }).session(session);
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     // 3. Mettre à jour la progression du projet
     const project = await Project.findById(projectId).session(session);
     if (project) {
@@ -253,13 +289,20 @@ exports.deleteEmployeTask = async (req, res) => {
 
       await project.save({ session });
     }
+<<<<<<< HEAD
    
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
     // 4. Valider la transaction
     await session.commitTransaction();
     session.endSession();
+<<<<<<< HEAD
     // Vérifier si toutes les tâches quotidiennes sont complétées après suppression
       await checkLateTasks(io);
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     res.status(200).json({
       message: "Tâche supprimée avec succès",
       affectedProject: projectId,
@@ -284,7 +327,10 @@ exports.updateEmployeTask = async (req, res) => {
   const userId = req.user._id;
   const session = await mongoose.startSession();
   session.startTransaction();
+<<<<<<< HEAD
   const io = req.app.get('io');
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   try {
     const {
@@ -299,6 +345,7 @@ exports.updateEmployeTask = async (req, res) => {
       intervention,
     } = req.body;
 
+<<<<<<< HEAD
     const task = await Task.findById(taskId)
        .populate('assignedTo', 'name')
        .populate('project', '_id name')
@@ -311,6 +358,9 @@ exports.updateEmployeTask = async (req, res) => {
 
 
 
+=======
+    const task = await Task.findById(taskId).session(session);
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (!task) {
       await session.abortTransaction();
       session.endSession();
@@ -364,6 +414,7 @@ exports.updateEmployeTask = async (req, res) => {
       }
     }
 
+<<<<<<< HEAD
          // Détecter les changements pour les notifications
         const changes = [];
         const oldValues = {
@@ -385,6 +436,8 @@ exports.updateEmployeTask = async (req, res) => {
     if (intervention && intervention !== task.intervention) changes.push('type d\'intervention');
     if (projectId && projectId.toString() !== task.project?._id.toString()) changes.push('projet'); 
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (title) task.title = title;
     if (description !== undefined) task.description = description;
     if (type) task.type = type;
@@ -413,6 +466,7 @@ exports.updateEmployeTask = async (req, res) => {
     }
 
     const updatedTask = await task.save({ session });
+<<<<<<< HEAD
     const populatedTask1 = await Task.findById(updatedTask._id).session(session)
         .populate({
           path: "project",
@@ -538,6 +592,8 @@ exports.updateEmployeTask = async (req, res) => {
 
 
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
     await session.commitTransaction();
     session.endSession();
@@ -594,9 +650,15 @@ exports.toggleFavorites = async (req, res) => {
     }
 
     // Vérifie que l'utilisateur est bien le créateur de la tâche
+<<<<<<< HEAD
     if (!task.assignedTo.equals(userId)) {
       return res.status(403).json({
         message: "Seul les employees assignees a la tâche peut effectuer cette action",
+=======
+    if (!task.createdBy._id.equals(userId)) {
+      return res.status(403).json({
+        message: "Seul le créateur de la tâche peut effectuer cette action",
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       });
     }
 
@@ -604,7 +666,10 @@ exports.toggleFavorites = async (req, res) => {
     await task.save();
 
     res.status(200).json({
+<<<<<<< HEAD
        isFavorite: task.isFavorite, 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       message: task.isFavorite
         ? "Tâche favorisée avec succès"
         : "Tâche retirée des favoris avec succès",
@@ -631,6 +696,7 @@ exports.getFavoriteTasks = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur", error: err.message });
   }
 };
+<<<<<<< HEAD
 
 exports.validateDay = async (req, res) => {
   const session = await mongoose.startSession();
@@ -768,3 +834,5 @@ exports.cancelDayValidation = async (req, res) => {
   }
 };
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068

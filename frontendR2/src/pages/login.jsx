@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../login.css";
+<<<<<<< HEAD
 import loginImage from "../assets/login-logo.png";
 import api from '../api/intercepteur'
+=======
+import loginImage from "../assets/login-logo.png"; // Votre image de fond
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +17,10 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+<<<<<<< HEAD
   const [showPassword, setShowPassword] = useState(false);
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,7 +28,12 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+<<<<<<< HEAD
       const response = await api.post("/auth/login",
+=======
+      const response = await axios.post(
+        "http://localhost:5001/api/auth/login",
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         {
           email: formData.email.trim().toLowerCase(),
           password: formData.password,
@@ -30,8 +42,15 @@ const Login = () => {
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
+<<<<<<< HEAD
       localStorage.setItem("role", response.data.user.role);
 
+=======
+
+      localStorage.setItem("role", response.data.user.role); // ✅ AJOUTÉ
+
+      // Redirection basée sur le rôle
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       const redirectPath =
         response.data.user.role === "admin"
           ? "/admin/dashboard"
@@ -113,6 +132,7 @@ const Login = () => {
                   Mot de passe
                 </label>
                 <div className="input-with-icon">
+<<<<<<< HEAD
                <i 
                 className={`fas fa-lock ${showPassword ? 'd-none' : ''}`} 
                 style={{ display: showPassword ? 'none' : 'block' }}
@@ -120,17 +140,25 @@ const Login = () => {
 
                   <input
                     type={showPassword ? "text" : "password"}
+=======
+                  <i className="fas fa-lock"></i>
+                  <input
+                    type="password"
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
                     required
                   />
+<<<<<<< HEAD
                   <i 
                     className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"} password-toggle`}
                     onClick={() => setShowPassword(!showPassword)}
                     style={{ cursor: "pointer" }}
                   />
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
                 </div>
               </div>
 
@@ -168,4 +196,8 @@ const Login = () => {
   );
 };
 
+<<<<<<< HEAD
 export default Login;
+=======
+export default Login;
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068

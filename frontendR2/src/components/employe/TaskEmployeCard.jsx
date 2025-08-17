@@ -11,6 +11,7 @@ import defaultProjectLogo from "../../assets/images/project-default.jpg";
 import defaultProfil from "../../assets/images/profil-default.jpeg";
 import { MdAccessTime } from "react-icons/md";
 import axios from "axios";
+<<<<<<< HEAD
 import { toast } from "react-toastify";
 
 
@@ -18,6 +19,12 @@ const TaskEmployeCard = ({ tasks, handelDelete, onEditTask }) => {
   const [localTasks, setLocalTasks] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user?._id;
+=======
+
+const TaskEmployeCard = ({ tasks, handelDelete, onEditTask }) => {
+  const [localTasks, setLocalTasks] = useState([]);
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   useEffect(() => {
     setLocalTasks(tasks);
   }, [tasks]);
@@ -34,7 +41,11 @@ const TaskEmployeCard = ({ tasks, handelDelete, onEditTask }) => {
 
     // (Optionnel) Envoie vers le backend
     try {
+<<<<<<< HEAD
      const response= await axios.post(
+=======
+      await axios.post(
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         `http://localhost:5001/api/employee/tasks/${taskId}/toggle-favorite`,
         {},
 
@@ -44,12 +55,15 @@ const TaskEmployeCard = ({ tasks, handelDelete, onEditTask }) => {
           },
         }
       );
+<<<<<<< HEAD
        if (response.data.isFavorite) {
       toast.success("Tâche ajoutée aux favoris");
     } else {
       toast.info("Tâche retirée des favoris");
     }
       toast
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     } catch (error) {
       console.error("Erreur lors de la mise à jour du favori :", error);
     }
@@ -141,7 +155,10 @@ const TaskEmployeCard = ({ tasks, handelDelete, onEditTask }) => {
                   cursor: "pointer",
                   border: "none",
                   backgroundColor: "transparent",
+<<<<<<< HEAD
                   display: task.assignedTo?._id === userId? "block" : "none", // Seul l'assigné voit le bouton
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
                 }}
                 onClick={() => toggleFavorite(task._id)}
               >

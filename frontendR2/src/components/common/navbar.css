@@ -186,6 +186,7 @@
   .toggle-button {
     display: block;
   }
+<<<<<<< HEAD
 }
 /* Styles pour l'icône de messagerie et le badge */
 .message-icon-container {
@@ -213,4 +214,6 @@
 .navbare .menue a {
   position: relative;
   padding: 10px;
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 }

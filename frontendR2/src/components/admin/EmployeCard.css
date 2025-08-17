@@ -353,7 +353,11 @@
 .dashboard-button {
   position: absolute;
   top: 10px;
+<<<<<<< HEAD
   left: 10px;
+=======
+  right: 10px;
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   background: rgba(234, 240, 241, 0.9);
   border: none;
   border-radius: 50%;

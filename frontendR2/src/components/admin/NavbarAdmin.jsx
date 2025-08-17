@@ -5,12 +5,19 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import defaultPhoto from "../../assets/images/profil-default.jpeg";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import NotificationBell from '../common/NotificationBell';
 import '../common/navbar.css'
 import { useMessaging } from '../../context/MessagingContext';
 
 const NavbarAdmin = () => {
   const { unreadCount, conversations } = useMessaging();
+=======
+import NotificationBell from '../common/NotificationBell'; // Assurez-vous que le chemin est correct
+import '../common/navbar.css'
+
+const NavbarAdmin = () => {
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   const [menuOpen, setMenuOpen] = useState(false);
   const [profil, setProfil] = useState({});
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -28,11 +35,14 @@ const NavbarAdmin = () => {
       .catch((err) => console.log("ERROR : ", err));
   }, []);
 
+<<<<<<< HEAD
   useEffect(() => {
     console.log("Current unreadCount:", unreadCount);
     console.log("Conversations:", conversations);
   }, [unreadCount, conversations])
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   const profileImageSrc =
     profil.profilePhoto && profil.profilePhoto !== "default-avatar.png"
       ? profil.profilePhoto
@@ -43,10 +53,13 @@ const NavbarAdmin = () => {
     navigate("/");
   };
 
+<<<<<<< HEAD
   const handleProfileClick = () => {
     navigate("/admin/profil");
   };
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   return (
     <>
       {/* Bouton menu pour petits écrans */}
@@ -91,6 +104,7 @@ const NavbarAdmin = () => {
           >
             <i className="fa-solid fa-users"></i>
           </NavLink>
+<<<<<<< HEAD
           <NavLink
             to="/admin/messaging"
             className={({ isActive }) => (isActive ? "activee" : "not-activee")}
@@ -119,6 +133,28 @@ const NavbarAdmin = () => {
             onClick={handleProfileClick}
             style={{ cursor: 'pointer' }}
           >
+=======
+        
+          <NavLink
+            to="/admin/profil"
+            className={({ isActive }) => (isActive ? "activee" : "not-activee")}
+          >
+            <i className="fa-solid fa-address-card"></i>
+          </NavLink>
+          <NavLink
+          to="#"
+          className={({ isActive }) => (isActive ? "activee" : "not-activee")}
+          onClick={(e) => e.preventDefault()}
+        >
+          <NotificationBell />
+        </NavLink>
+
+        </div>
+
+       
+            <div className="profile-sectione">
+          <div className="profil-connecte text-white rounded-circle d-flex justify-content-center align-items-center">
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
             <img src={profileImageSrc} alt="Profile" />
           </div>
 
@@ -132,7 +168,12 @@ const NavbarAdmin = () => {
             </button>
           </div>
         </div>
+<<<<<<< HEAD
       </div>
+=======
+        </div>
+      
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     </>
   );
 };

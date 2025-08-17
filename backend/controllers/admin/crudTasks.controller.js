@@ -3,6 +3,7 @@ const Project = require("../../models/project");
 const User = require("../../models/user");
 const mongoose = require("mongoose");
 const path = require("path");
+<<<<<<< HEAD
 const { sendNotification, notifyManagersAndAdmins } = require("../../utils/notification.utils");
 const { sendNotification2, notifyManagersAndAdmins2 } = require("../../utils/notification2.utils");
 
@@ -66,6 +67,13 @@ exports.getAllTasks = async (req, res) => {
     const now = new Date();
      const io = req.app.get('io');
      await checkLateTasks(io);
+=======
+
+exports.getAllTasks = async (req, res) => {
+  try {
+    const baseUrl = `${req.protocol}://${req.get("host")}/public/`;
+    const now = new Date();
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
     // 1. Mettre à jour les tâches en retard
     await Task.bulkWrite([
@@ -102,11 +110,19 @@ exports.getAllTasks = async (req, res) => {
 
       // chemins images
       const projectLogoPath = project.logo
+<<<<<<< HEAD
         ? project.logo
         : null;
 
       const profilePhotoPath = assignedTo.profilePhoto
         ? assignedTo.profilePhoto
+=======
+        ? `${baseUrl}/${project.logo}`
+        : null;
+
+      const profilePhotoPath = assignedTo.profilePhoto
+        ? `${baseUrl}/${assignedTo.profilePhoto}`
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         : null;
 
       return {
@@ -144,8 +160,11 @@ exports.getAllTasks = async (req, res) => {
 exports.createTask = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
+<<<<<<< HEAD
   const io = req.app.get('io');
   const baseUrl= `${req.protocol}://${req.get("host")}/public/`
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   try {
     const {
@@ -159,8 +178,12 @@ exports.createTask = async (req, res) => {
       progress,
       intervention,
     } = req.body;
+<<<<<<< HEAD
   
     await checkLateTasks(io);
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     // 1. Validation des données
     if (!title || !type || !projectId) {
       await session.abortTransaction();
@@ -214,6 +237,7 @@ exports.createTask = async (req, res) => {
 
     const savedTask = await newTask.save({ session });
 
+<<<<<<< HEAD
  
     // 🔹 Recharger avec populate pour inclure les infos du projet et de l’employé assigné
 const populatedTask = await Task.findById(savedTask._id).session(session)
@@ -250,6 +274,8 @@ console.log("populatedTask:", populatedTask);
     }
     
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     await session.commitTransaction();
     session.endSession();
 
@@ -283,6 +309,7 @@ console.log("populatedTask:", populatedTask);
   }
 };
 exports.updateTask = async (req, res) => {
+<<<<<<< HEAD
   const userId = req.user._id;
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -294,6 +321,10 @@ exports.updateTask = async (req, res) => {
     const user = await User.findById(userId).session(session).select('role');
     return !['admin', 'manager'].includes(user.role);
   };
+=======
+  const session = await mongoose.startSession();
+  session.startTransaction();
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   try {
     const { id } = req.params;
@@ -309,6 +340,7 @@ exports.updateTask = async (req, res) => {
       intervention,
     } = req.body;
 
+<<<<<<< HEAD
     await checkLateTasks(io);
 
     const task = await Task.findById(id).populate({
@@ -322,20 +354,33 @@ exports.updateTask = async (req, res) => {
       select: "_id name",
     }).session(session);
 
+=======
+    const task = await Task.findById(id).session(session);
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (!task) {
       await session.abortTransaction();
       session.endSession();
       return res.status(404).json({ message: "Task not found" });
     }
 
+<<<<<<< HEAD
     // Validations des champs
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (type && !["daily", "long"].includes(type)) {
       await session.abortTransaction();
       session.endSession();
       return res.status(400).json({ message: "Invalid task type" });
     }
 
+<<<<<<< HEAD
     if (status && !["pending", "inProgress", "completed", "late"].includes(status)) {
+=======
+    if (
+      status &&
+      !["pending", "inProgress", "completed", "late"].includes(status)
+    ) {
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       await session.abortTransaction();
       session.endSession();
       return res.status(400).json({ message: "Invalid task status" });
@@ -350,7 +395,13 @@ exports.updateTask = async (req, res) => {
     if (progress && (progress < 0 || progress > 100)) {
       await session.abortTransaction();
       session.endSession();
+<<<<<<< HEAD
       return res.status(400).json({ message: "Progress must be between 0 and 100" });
+=======
+      return res
+        .status(400)
+        .json({ message: "Progress must be between 0 and 100" });
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     }
 
     if (projectId) {
@@ -371,6 +422,7 @@ exports.updateTask = async (req, res) => {
       }
     }
 
+<<<<<<< HEAD
     const previousAssignedTo = task.assignedTo;
     const assignmentChanged = assignedToId && !task.assignedTo?.equals(assignedToId);
     const unassigned = !assignedToId && task.assignedTo;
@@ -397,13 +449,24 @@ exports.updateTask = async (req, res) => {
     if (projectId && projectId.toString() !== task.project?._id.toString()) changes.push('projet');
 
     // Mise à jour des champs de la tâche
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (title) task.title = title;
     if (description !== undefined) task.description = description;
     if (type) task.type = type;
     if (status) task.status = status;
     if (deadline) task.deadline = deadline;
+<<<<<<< HEAD
     if (projectId) task.project = projectId;
     if (assignedToId) task.assignedTo = assignedToId;
+=======
+    if (projectId) {
+      task.project = projectId;
+    }
+    if (assignedToId) {
+      task.assignedTo = assignedToId; // Permet de désassigner en envoyant null
+    }
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (progress !== undefined) task.progress = progress;
     if (intervention) task.intervention = intervention;
     task.updatedAt = new Date();
@@ -412,11 +475,20 @@ exports.updateTask = async (req, res) => {
       task.deadline = undefined;
     }
 
+<<<<<<< HEAD
     if (task.deadline && new Date() > task.deadline && task.status !== "completed") {
+=======
+    if (
+      task.deadline &&
+      new Date() > task.deadline &&
+      task.status !== "completed"
+    ) {
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       task.status = "late";
     }
 
     const updatedTask = await task.save({ session });
+<<<<<<< HEAD
     await checkLateTasks(io);
 
     // Récupération de la tâche mise à jour avec toutes les relations
@@ -578,6 +650,8 @@ exports.updateTask = async (req, res) => {
 
     // Émission de l'événement de mise à jour
     io.emit('task_updated', formattedTask);
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
     await session.commitTransaction();
     session.endSession();
@@ -626,19 +700,28 @@ exports.updateTask = async (req, res) => {
 exports.deleteTask = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
+<<<<<<< HEAD
     const io = req.app.get('io');
    
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   try {
     const { id } = req.params;
 
     // 1. Vérifier que la tâche existe et récupérer le projet associé
+<<<<<<< HEAD
     const task = await Task.findById(id).populate('assignedTo', 'name')
       .populate('project', 'name').session(session);
+=======
+    const task = await Task.findById(id).session(session);
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     if (!task) {
       await session.abortTransaction();
       session.endSession();
       return res.status(404).json({ message: "Tâche non trouvée" });
     }
+<<<<<<< HEAD
      const projectId = task.project;
     
     await checkLateTasks(io);
@@ -672,6 +755,14 @@ exports.deleteTask = async (req, res) => {
     await Task.deleteOne({ _id: id }).session(session);
     
      io.emit('task_deleted', id);
+=======
+
+    const projectId = task.project;
+
+    // 2. Supprimer la tâche
+    await Task.deleteOne({ _id: id }).session(session);
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     // 3. Mettre à jour la progression du projet
     const project = await Project.findById(projectId).session(session);
     if (project) {

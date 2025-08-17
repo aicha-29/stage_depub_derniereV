@@ -15,10 +15,13 @@ const taskSchema = new mongoose.Schema({
     enum: ["daily", "long"],
     required: true,
   },
+<<<<<<< HEAD
    lateNotificationSent: {
     type: Boolean,
     default: false
   },
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   status: {
     type: String,
     enum: ["pending", "inProgress", "completed", "late"],
@@ -126,6 +129,7 @@ taskSchema.post("deleteOne", { document: true }, async function (task) {
     }
   }
 });
+<<<<<<< HEAD
 // Middleware pour marquer automatiquement les tâches en retard
 taskSchema.pre("save", function (next) {
  if (this.type === "long" && 
@@ -142,6 +146,18 @@ taskSchema.pre("save", function (next) {
       this.deadline && this.isModified('deadline')  && this.deadline>new Date() && this.status === "late"){
      this.lateNotificationSent = false;
      this.status="pending";
+=======
+
+// Middleware pour marquer automatiquement les tâches en retard
+taskSchema.pre("save", function (next) {
+  if (
+    this.deadline &&
+    new Date() > this.deadline &&
+    this.type === "long" &&
+    this.status !== "completed"
+  ) {
+    this.status = "late";
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   }
   next();
 });

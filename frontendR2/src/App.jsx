@@ -23,9 +23,12 @@ import StatsPageWrapper from "./pages/employe/StatsPageWrapper";
 import ProjectsPageManager from "./pages/manager/ProjectsPageManager2";
 import StatsPageManager from "./pages/manager/StatsPageManager";
 import TasksPageManager from "./pages/manager/TasksPageManager";
+<<<<<<< HEAD
 import { MessagingProvider } from './context/MessagingContext';
 import MessagingPanel from './components/messaging/MessagingPanel';
 import MessagingPage from './pages/MessagingPage';
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
 function App() {
   const role = localStorage.getItem("role");
@@ -45,7 +48,10 @@ function App() {
         "/employe/favorites",
         "/employe/profil",
         "/employee/notifications",
+<<<<<<< HEAD
         "/employe/messaging"
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       ].includes(path)) ||
       (role === "admin" &&
         [
@@ -55,7 +61,10 @@ function App() {
           "/admin/profil",
           "/admin/taches",
           "/admin/notifications",
+<<<<<<< HEAD
           "/admin/messaging"
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         ].includes(path)) ||
       (role === "manager" &&
         [
@@ -66,7 +75,10 @@ function App() {
           "/manager/favorites",
           "/manager/taches",
           "/manager/notifications",
+<<<<<<< HEAD
           "/manager/messaging"
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
         ].includes(path)));
 
   const renderSidebar = () => {
@@ -79,8 +91,12 @@ function App() {
   };
 
   return (
+<<<<<<< HEAD
 
      <MessagingProvider>
+=======
+    <>
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
       <ToastContainer />
       {isPublicRoute ? (
         <Routes>
@@ -93,6 +109,7 @@ function App() {
           <div className="sidebar">{renderSidebar()}</div>
           <div className="main-content">
             <Routes>
+<<<<<<< HEAD
           <Route
             path="/employe/messaging"
             element={
@@ -117,6 +134,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
               <Route
                 path="/employe/dashboard"
                 element={
@@ -282,7 +301,11 @@ function App() {
           </div>
         </div>
       )}
+<<<<<<< HEAD
      </MessagingProvider>
+=======
+    </>
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   );
 }
 

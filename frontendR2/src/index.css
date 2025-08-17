@@ -1201,6 +1201,7 @@ option[value="low"] {
     margin-right: 5px;
   }
 }
+<<<<<<< HEAD
 
 /* Messagerie */
 .messaging-panel {
@@ -1369,3 +1370,5 @@ option[value="low"] {
   border-radius: 50%;
   margin-right: 10px;
 }
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068

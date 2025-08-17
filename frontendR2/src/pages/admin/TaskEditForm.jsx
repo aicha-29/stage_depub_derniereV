@@ -20,7 +20,11 @@ const TaskEditForm = ({
     progress: taskToEdit.progress || 0,
     intervention: taskToEdit.intervention || "on_site",
   });
+<<<<<<< HEAD
   const [isSubmitting, setIsSubmitting] = useState(false);
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -39,7 +43,10 @@ const TaskEditForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     if (isSubmitting) return;
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     setError("");
 
     if (!taskData.title || !taskData.type) {
@@ -52,7 +59,10 @@ const TaskEditForm = ({
       return;
     }
 
+<<<<<<< HEAD
      setIsSubmitting(true);
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     try {
       const response = await axios.put(
         `http://localhost:5001/api/admin/tasks/update/${taskToEdit._id}`,
@@ -70,9 +80,13 @@ const TaskEditForm = ({
     } catch (err) {
       setError(err.response?.data?.message || "Erreur serveur");
       console.error(err.response?.data);
+<<<<<<< HEAD
     }finally {
     setIsSubmitting(false);
   }
+=======
+    }
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   };
   console.log("task to edit  ", taskToEdit);
   console.log("task data", taskData);

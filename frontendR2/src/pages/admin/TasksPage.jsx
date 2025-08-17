@@ -23,7 +23,30 @@ const TasksPage = () => {
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
+<<<<<<< HEAD
     const fetchTasks = async () => {
+=======
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user?._id;
+    
+    // Configuration Socket.IO
+    const socket = getSocket(token, userId);
+
+    const handleNotification = (notification) => {
+      toast.info(notification.message);
+    };
+    socket.on('new_notification', handleNotification);
+
+    return () => {
+      socket.off('new_notification', handleNotification);
+    };
+  }, []);
+
+  const fetchTasks = async () => {
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     try {
       const response = await fetch("http://localhost:5001/api/admin/tasks/", {
         headers: {
@@ -43,6 +66,7 @@ const TasksPage = () => {
     }
   };
 
+<<<<<<< HEAD
     // Fonction helper pour formater les tâches de manière cohérente
 const formatTask = (task) => {
   return {
@@ -151,6 +175,8 @@ const handleTaskUpdated = (updatedTask) => {
 
 
 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -216,9 +242,15 @@ const handleTaskUpdated = (updatedTask) => {
   }, [searchTerm, statusFilter, projectFilter, employeeFilter, taskTypeFilter, tasks]);
 
   const handelTaskAdd = async () => {
+<<<<<<< HEAD
    setShowModal(false);
     fetchTasks();
    };
+=======
+    setShowModal(false);
+    fetchTasks();
+  };
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   const handelDelete = async (id) => {
     try {
@@ -239,6 +271,7 @@ const handleTaskUpdated = (updatedTask) => {
     setShowEditModal(true);
   };
 
+<<<<<<< HEAD
    const handleUpdateTask = (updatedTask) => {
      setTasks((prevTasks) =>
        prevTasks.map((task) =>
@@ -254,6 +287,21 @@ const handleTaskUpdated = (updatedTask) => {
    };
 
 
+=======
+  const handleUpdateTask = (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task._id === updatedTask._id ? updatedTask : task
+      )
+    );
+    setFilteredTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task._id === updatedTask._id ? updatedTask : task
+      )
+    );
+    setShowEditModal(false);
+  };
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   // Récupérer les valeurs uniques pour les filtres dynamiques
   const uniqueProjects = [

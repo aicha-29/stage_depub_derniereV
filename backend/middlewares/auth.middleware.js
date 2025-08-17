@@ -12,12 +12,16 @@ module.exports = async (req, res, next) => {
 
     // 2. Vérifier le token JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+<<<<<<< HEAD
      
     // Vérifier l'expiration du token
     const now = Date.now().valueOf() / 1000;
     if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
       return res.status(401).json({ message: 'Token expiré', code: 'TOKEN_EXPIRED' });
     }
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     // 3. Récupérer l'utilisateur SANS le mot de passe
     req.user = await User.findById(decoded.id).select('-password');
 
@@ -28,9 +32,12 @@ module.exports = async (req, res, next) => {
     // 4. Passer au middleware suivant
     next();
   } catch (err) {
+<<<<<<< HEAD
      if (err.name === 'TokenExpiredError') {
       return res.status(401).json({ message: 'Token expiré', code: 'TOKEN_EXPIRED' });
     }
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     res.status(401).json({ message:err.message || 'Token invalide' });
   }
 };

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 import { io } from 'socket.io-client';
 let socket = null;
 
@@ -21,4 +25,8 @@ export function getSocket(token, userId) {
     });
   }
   return socket;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068

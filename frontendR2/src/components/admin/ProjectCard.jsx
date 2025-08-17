@@ -56,12 +56,20 @@ const ProjectCard = ({ project, onDelete, handelEditClick }) => {
         </div>
 
         <div className="project-actions">
+<<<<<<< HEAD
          {handelEditClick && ( <FiEdit
+=======
+          <FiEdit
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
             className="edit-icon"
             title="Modifier"
             onClick={() => handelEditClick(project)}
             style={{ zIndex: 1000 }}
+<<<<<<< HEAD
           />)}
+=======
+          />
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
           {role === "admin" && (
             <FiTrash2
               className="delete-icon"

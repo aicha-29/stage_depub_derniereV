@@ -21,8 +21,11 @@ const TaskCard = ({ tasks, handelDelete, onEditTask }) => {
   const [role, setRole] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
   const [loadingTaskIds, setLoadingTaskIds] = useState([]);
+<<<<<<< HEAD
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user?._id;
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
 
   useEffect(() => {
     setLocalTasks(tasks);
@@ -116,11 +119,15 @@ const TaskCard = ({ tasks, handelDelete, onEditTask }) => {
             <div className="task-card-header">
               <div className="project-info">
                 <img
+<<<<<<< HEAD
                 src={
                  task.project.logo
                 ? `http://localhost:5001/public/${task.project.logo}`
                 : defaultProjectLogo
                 }
+=======
+                  src={task.project.logo || defaultProjectLogo}
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
                   alt="logo"
                   className="project-logo"
                 />
@@ -135,7 +142,10 @@ const TaskCard = ({ tasks, handelDelete, onEditTask }) => {
                   cursor: isFavoriting ? "not-allowed" : "pointer",
                   border: "none",
                   backgroundColor: "transparent",
+<<<<<<< HEAD
                    display: task.assignedTo?._id === userId? "block" : "none", 
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
                 }}
                 disabled={isFavoriting}
                 onClick={() => {
@@ -228,9 +238,13 @@ const TaskCard = ({ tasks, handelDelete, onEditTask }) => {
               {task.assignedTo && (
                 <div className="assigned-user">
                   <img
+<<<<<<< HEAD
                     src={task.assignedTo.profilePhoto?
                       `http://localhost:5001/public/${task.assignedTo.profilePhoto}`:defaultProfil
                     }
+=======
+                    src={task.assignedTo.profilePhoto || defaultProfil}
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
                     alt={task.assignedTo.name}
                     className="user-avatar"
                   />

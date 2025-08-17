@@ -16,7 +16,10 @@
     "axios": "^1.10.0",
     "bootstrap": "^5.3.7",
     "chart.js": "^4.5.0",
+<<<<<<< HEAD
     "date-fns": "^4.1.0",
+=======
+>>>>>>> 60710b6d54c5e787e27567e0a08902e5df448068
     "echarts": "^6.0.0",
     "express-async-handler": "^1.2.0",
     "lucide-react": "^0.525.0",
